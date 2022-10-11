@@ -15,22 +15,24 @@ template <> void ECS::run_system<System::Animation>()
   BeginDrawing();
   ClearBackground(RAYWHITE);
   for (const auto &view_id : view_registry.all_ids()) {
-    if (!view_registry.get(view_id).active) {
+    auto &curr_view = view_registry.get(view_id);
+    if (!curr_view.active) {
       continue;
     }
-    view_registry.get(view_id).camera.target = {body_registry.get(view_id).rect.x, body_registry.get(view_id).rect.y};
-    BeginMode2D(view_registry.get(view_id).camera);
-    for (const auto &id : anim_registry.all_ids()) {
+    auto &curr_body = body_registry.get(view_id);
+    curr_view.camera.target = {curr_body.rect.x, curr_body.rect.y};
+    BeginMode2D(curr_view.camera);
+    for (const auto &anim_id : anim_registry.all_ids()) {
       // Update frame
-      auto &anim = anim_registry.get(id).anim;
-      bool is_input_entity = input_registry.has(id);
-      if (is_input_entity && input_registry.get(id).changed) {
-        anim = Resources::animations[anim.type()][input_registry.get(id).key_pressed];
+      auto &curr_anim = anim_registry.get(anim_id).anim;
+      // if has input binded to this entity
+      if (input_registry.has(anim_id) && input_registry.get(anim_id).changed) {
+        curr_anim = Resources::animations[curr_anim.type()][input_registry.get(anim_id).key_pressed];
       }
       // Draw frame
-      Vector2 position = {body_registry.get(id).rect.x, body_registry.get(id).rect.y};
-      if (Vector2Distance(view_registry.get(view_id).camera.target, position) < 450.f / 4) {
-        anim.run(position, view_registry.get(view_id).tint);
+      Vector2 position = {body_registry.get(anim_id).rect.x, body_registry.get(anim_id).rect.y};
+      if (Vector2Distance(curr_view.camera.target, position) < 450.f / 4) {
+        curr_anim.run(position, curr_view.tint);
       }
     }
     EndMode2D();
