@@ -31,7 +31,7 @@ template <> void ECS::run_system<System::Animation>()
       }
       // Draw frame
       Vector2 position = {body_registry.get(anim_id).rect.x, body_registry.get(anim_id).rect.y};
-      if (Vector2Distance(curr_view.camera.target, position) < 450.f / 4) {
+      if (Vector2Distance(curr_view.camera.target, position) < Settings::SCREEN_WIDTH / 4) {
         curr_anim.run(position, curr_view.tint);
       }
     }
@@ -48,7 +48,7 @@ template <> void ECS::run_system<System::Physics>()
   for (const auto &id : input_registry.all_ids()) {
     body_registry.get(id).closest_x = FLT_MAX;
     body_registry.get(id).closest_y = FLT_MAX;
-    auto movement = Settings::key_to_movement[input_registry.get(id).key_pressed];
+    auto movement = Settings::key_to_movement.at(input_registry.get(id).key_pressed);
     Rectangle updated_rect = Settings::move(body_registry.get(id).rect, movement);
     for (const auto &body_id : body_registry.all_ids()) {
       if (body_id == id) {

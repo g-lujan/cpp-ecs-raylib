@@ -30,7 +30,6 @@ set(SOURCE_FILES
 	code/ecs.hpp 
 	code/resources.cpp 
 	code/resources.hpp
-	code/settings.cpp
 	code/settings.hpp
 	code/setup.cpp 
 	code/setup.hpp)
