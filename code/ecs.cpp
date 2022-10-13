@@ -5,15 +5,13 @@
 #include "settings.hpp"
 #include <iostream>
 
-template <> void ECS::run_system<System::Animation>()
+template <> void ECS::run_system<System::Tile>()
 {
-  Component_Registry<Anim> &anim_registry = component_registry<Anim>();
+  Component_Registry<Tile> &tile_registry = component_registry<Tile>();
   Component_Registry<Body> &body_registry = component_registry<Body>();
   Component_Registry<View> &view_registry = component_registry<View>();
   Component_Registry<Input> &input_registry = component_registry<Input>();
 
-  BeginDrawing();
-  ClearBackground(RAYWHITE);
   for (const auto &view_id : view_registry.all_ids()) {
     auto &curr_view = view_registry.get(view_id);
     if (!curr_view.active) {
@@ -22,7 +20,36 @@ template <> void ECS::run_system<System::Animation>()
     auto &curr_body = body_registry.get(view_id);
     curr_view.camera.target = {curr_body.rect.x, curr_body.rect.y};
     BeginMode2D(curr_view.camera);
-    for (const auto &anim_id : anim_registry.all_ids()) {
+    for (const auto &tile_id : tile_registry.all_ids()) {
+      // Update frame
+      auto &tile_component = tile_registry.get(tile_id);
+      auto &tile = Resources::tiles[tile_component.map][tile_component.tile_name];
+      // Draw frame
+      Vector2 position = {body_registry.get(tile_id).rect.x, body_registry.get(tile_id).rect.y};
+      if (Vector2Distance(curr_view.camera.target, position) < Settings::SCREEN_WIDTH / 4) {
+        tile.draw(position, curr_view.tint);
+      }
+    }
+    EndMode2D();
+  }
+}
+
+template <> void ECS::run_system<System::Animation>()
+{
+  Component_Registry<Anim> &anim_registry = component_registry<Anim>();
+  Component_Registry<Body> &body_registry = component_registry<Body>();
+  Component_Registry<View> &view_registry = component_registry<View>();
+  Component_Registry<Input> &input_registry = component_registry<Input>();
+
+  for (const auto &view_id : view_registry.all_ids()) {
+    auto &curr_view = view_registry.get(view_id);
+    if (!curr_view.active) {
+      continue;
+    }
+    auto &curr_body = body_registry.get(view_id);
+    curr_view.camera.target = {curr_body.rect.x, curr_body.rect.y};
+    BeginMode2D(curr_view.camera);
+    for (const auto &anim_id : anim_registry.all_ids_ordered()) {
       // Update frame
       auto &curr_anim = anim_registry.get(anim_id).anim;
       // if has input binded to this entity
@@ -37,7 +64,6 @@ template <> void ECS::run_system<System::Animation>()
     }
     EndMode2D();
   }
-  EndDrawing();
 }
 
 template <> void ECS::run_system<System::Physics>()
@@ -71,6 +97,9 @@ template <> void ECS::run_system<System::Physics>()
           else if (body_registry.get(body_id).type == Body_Type::Door) {
             // level change if has key
             // else just ignore
+          }
+          else if (body_registry.get(body_id).type == Body_Type::Sprite) {
+            break;
           }
           return;
         }

@@ -7,6 +7,15 @@
 #include <iostream>
 #include <stdlib.h>
 
+void call_drawing_systems(ECS &ecs)
+{
+  BeginDrawing();
+  ClearBackground(BLACK);
+  ecs.run_system<System::Tile>();
+  ecs.run_system<System::Animation>();
+  EndDrawing();
+}
+
 int main(void)
 {
   InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, "Shadows");
@@ -19,14 +28,14 @@ int main(void)
       {KEY_LEFT, Resources::Animation(&Resources::textures["player"], Resources::Animation_Type::PLAYER, {0, 32}, 32, 8, true)},
   }};
   ECS ecs;
-  // Player
+  Setup::map(ecs);
   Setup::players(ecs);
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
     // systems executions
     ecs.run_system<System::Input>();
     ecs.run_system<System::Physics>();
-    ecs.run_system<System::Animation>();
+    call_drawing_systems(ecs);
   }
   CloseWindow(); // Close window and OpenGL context
   return 0;

@@ -32,6 +32,13 @@ public:
     return {keys.begin(), keys.end()};
   }
 
+  std::vector<unsigned long long> all_ids_ordered()
+  {
+    auto ids = all_ids();
+    std::sort(ids.begin(), ids.end());
+    return ids;
+  }
+
   void remove(const unsigned long long id) { _components.remove(id); }
 
   void purge(const std::vector<unsigned long long> ids)
@@ -54,6 +61,7 @@ enum class Body_Type {
   Door,
   Wall,
   Bullet,
+  Sprite, // to delete when position and body decoupled
 };
 
 enum class Movement_Type {
@@ -86,11 +94,19 @@ struct Anim : public Component {
 };
 
 struct View : public Component {
-  View(Camera2D camera, Color tint, bool active) : camera{camera}, tint{tint}, active{active} {}
+  View(Camera2D camera, Color tint, bool active, Resources::Map map) : camera{camera}, tint{tint}, active{active}, map{map} {}
   Camera2D camera{0};
   Color tint;
+  Resources::Map map;
   bool active{false};
 };
+
+struct Tile : public Component {
+  Tile(int tile_name, Resources::Map map) : tile_name{tile_name}, map{map} {}
+  int tile_name;
+  Resources::Map map;
+};
+
 
 struct Input : public Component {
   Input(bool active) : active{active} {}

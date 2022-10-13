@@ -32,7 +32,8 @@ set(SOURCE_FILES
 	code/resources.hpp
 	code/settings.hpp
 	code/setup.cpp 
-	code/setup.hpp)
+	code/setup.hpp
+      external/json.hpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources/images DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources")
 

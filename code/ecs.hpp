@@ -11,8 +11,13 @@
 #include "components.hpp"
 
 // TODO find solution where you don't need to keep track of all types of Components in the variant
-using Component_Registry_Types =
-    std::variant<Component_Registry<Health>, Component_Registry<Body>, Component_Registry<Anim>, Component_Registry<View>, Component_Registry<Input>>;
+using Component_Registry_Types = std::variant<
+    Component_Registry<Health>,
+    Component_Registry<Body>,
+    Component_Registry<Anim>,
+    Component_Registry<View>,
+    Component_Registry<Input>,
+    Component_Registry<Tile>>;
 
 namespace System {
   struct Animation {
@@ -20,6 +25,8 @@ namespace System {
   struct Physics {
   };
   struct Input {
+  };
+  struct Tile {
   };
 } // namespace System
 

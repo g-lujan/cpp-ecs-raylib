@@ -8,6 +8,7 @@ namespace Settings {
   const float STEP = 1.0f;
   const int SCREEN_WIDTH = 800;
   const int SCREEN_HEIGHT = 450;
+  //const int FPS = 60;// introduces circular dependency -> better put pure constants in another file
 
   const std::unordered_map<KeyboardKey, Movement> key_to_movement{
       {KEY_NULL, {Movement_Type::IDLE, false}},
