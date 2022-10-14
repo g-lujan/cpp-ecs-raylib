@@ -19,16 +19,15 @@ namespace Resources {
     void draw(Rectangle src_rect, Vector2 dest, Color tint, bool flip = false)
     {
       if (flip) {
-        DrawTexturePro(_tex, {src_rect.x, src_rect.y, -src_rect.width, src_rect.height}, {dest.x, dest.y, 32 * scale, 32 * scale}, {0, 0}, 0, tint);
+        DrawTexturePro(_tex, {src_rect.x, src_rect.y, -src_rect.width, src_rect.height}, {dest.x, dest.y, 32, 32}, {0, 0}, 0, tint);
       }
       else {
-        DrawTexturePro(_tex, src_rect, {dest.x, dest.y, 32 * scale, 32 * scale}, {0, 0}, 0, tint);
+        DrawTexturePro(_tex, src_rect, {dest.x, dest.y, 32, 32}, {0, 0}, 0, tint);
       }
     }
 
   private:
     Texture2D _tex;
-    int scale{2};
   };
 
   class Tile {

@@ -13,11 +13,11 @@
             "scaleInEditor": 2
         },
         "ville.json": {
-            "scale": 1.5,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 342.66666666666663,
-                "y": 461.3333333333333
+                "x": 520,
+                "y": 219.99999999999997
             }
         }
     },

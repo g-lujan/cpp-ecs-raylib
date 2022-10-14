@@ -102,11 +102,10 @@ struct View : public Component {
 };
 
 struct Tile : public Component {
-  Tile(int tile_name, Resources::Map map) : tile_name{tile_name}, map{map} {}
-  int tile_name;
+  Tile(int tile_num, Resources::Map map) : tile_num{tile_num}, map{map} {}
+  int tile_num;
   Resources::Map map;
 };
-
 
 struct Input : public Component {
   Input(bool active) : active{active} {}

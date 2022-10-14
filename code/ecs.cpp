@@ -10,7 +10,6 @@ template <> void ECS::run_system<System::Tile>()
   Component_Registry<Tile> &tile_registry = component_registry<Tile>();
   Component_Registry<Body> &body_registry = component_registry<Body>();
   Component_Registry<View> &view_registry = component_registry<View>();
-  Component_Registry<Input> &input_registry = component_registry<Input>();
 
   for (const auto &view_id : view_registry.all_ids()) {
     auto &curr_view = view_registry.get(view_id);
@@ -23,10 +22,11 @@ template <> void ECS::run_system<System::Tile>()
     for (const auto &tile_id : tile_registry.all_ids()) {
       // Update frame
       auto &tile_component = tile_registry.get(tile_id);
-      auto &tile = Resources::tiles[tile_component.map][tile_component.tile_name];
+      auto &tile = Resources::tiles[tile_component.map][tile_component.tile_num];
       // Draw frame
       Vector2 position = {body_registry.get(tile_id).rect.x, body_registry.get(tile_id).rect.y};
-      if (Vector2Distance(curr_view.camera.target, position) < Settings::SCREEN_WIDTH / 4) {
+      float dist_x = std::abs(curr_view.camera.target.x - position.x);
+      if (dist_x < Settings::SCREEN_WIDTH / 4) {
         tile.draw(position, curr_view.tint);
       }
     }
@@ -58,7 +58,8 @@ template <> void ECS::run_system<System::Animation>()
       }
       // Draw frame
       Vector2 position = {body_registry.get(anim_id).rect.x, body_registry.get(anim_id).rect.y};
-      if (Vector2Distance(curr_view.camera.target, position) < Settings::SCREEN_WIDTH / 4) {
+      float dist_x = std::abs(curr_view.camera.target.x - position.x);
+      if (dist_x < Settings::SCREEN_WIDTH / 4) {
         curr_anim.run(position, curr_view.tint);
       }
     }
