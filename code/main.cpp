@@ -28,9 +28,9 @@ int main(void)
       {KEY_LEFT, Resources::Animation(&Resources::textures["player"], Resources::Animation_Type::PLAYER, {0, 32}, 32, 8, true)},
   }};
   ECS ecs;
-  Setup::map(ecs);
+  bool loaded_map_successfully = Setup::map(ecs, Resources::Map::HOMETOWN);
   Setup::players(ecs);
-  while (!WindowShouldClose()) // Detect window close button or ESC key
+  while (!WindowShouldClose() && loaded_map_successfully) // Detect window close button or ESC key
   {
     // systems executions
     ecs.run_system<System::Input>();

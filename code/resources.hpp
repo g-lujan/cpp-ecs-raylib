@@ -116,8 +116,14 @@ namespace Resources {
   // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
   extern std::unordered_map<std::string, Texture> textures;
   extern std::unordered_map<Map, std::vector<Tile>> tiles;
+  extern std::unordered_map<Map, std::string> map_json_path;
   // animations that react to input
   extern std::vector<std::unordered_map<KeyboardKey, Animation>> animations;
+
+  namespace Images {
+    inline constexpr auto BASE_PATH = "resources/images/";
+    inline constexpr auto PATH_HOMETOWN = "resources/images/hometown.png";
+  } // namespace Images
 } // namespace Resources
 
 #endif

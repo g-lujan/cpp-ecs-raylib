@@ -2,5 +2,5 @@
 
 namespace Setup {
   void players(ECS &ecs);
-  void map(ECS &ecs);
+  bool map(ECS &ecs, const Resources::Map map);
 } // namespace Setup
