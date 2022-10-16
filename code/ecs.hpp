@@ -1,33 +1,27 @@
 #ifndef _ECS_H__
 #define _ECS_H__
 
-#include <iostream>
-#include <memory>
 #include <typeindex>
 #include <unordered_map>
 #include <variant>
-#include <vector>
 
 #include "components.hpp"
 
 // TODO find solution where you don't need to keep track of all types of Components in the variant
 using Component_Registry_Types = std::variant<
     Component_Registry<Health>,
-    Component_Registry<Body>,
+    Component_Registry<Collider>,
     Component_Registry<Anim>,
     Component_Registry<View>,
     Component_Registry<Input>,
     Component_Registry<Tile>>;
 
 namespace System {
-  struct Animation {
-  };
-  struct Physics {
-  };
-  struct Input {
-  };
-  struct Tile {
-  };
+  struct Physics {};
+  struct Input {};
+  struct Draw {};
+  struct Animation {};
+  struct Tile {};
 } // namespace System
 
 class ECS {

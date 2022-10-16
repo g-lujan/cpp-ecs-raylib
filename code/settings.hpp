@@ -1,14 +1,25 @@
 #ifndef _SETTINGS_H__
 #define _SETTINGS_H__
 
-#include "components.hpp"
 #include "raylib.h"
 
 namespace Settings {
   inline constexpr float STEP = 1.0f;
   inline constexpr int SCREEN_WIDTH = 800;
   inline constexpr int SCREEN_HEIGHT = 600;
-  //const int FPS = 60;// introduces circular dependency -> better put pure constants in another file
+  const int FPS = 60;
+
+  enum class Movement_Type {
+    IDLE,
+    WALK,
+    JUMPING,
+  };
+
+  // Not a component
+  struct Movement {
+    Movement_Type type{Movement_Type::IDLE};
+    bool flip{false};
+  };
 
   const std::unordered_map<KeyboardKey, Movement> key_to_movement{
       {KEY_NULL, {Movement_Type::IDLE, false}},
@@ -23,10 +34,6 @@ namespace Settings {
     float dir = movement.flip ? -1 : 1;
     return Rectangle{rect.x + (STEP * dir), rect.y, rect.width, rect.height};
   };
-  /*
-  extern std::unordered_map<KeyboardKey, Movement> key_to_movement;
-  extern std::function<Rectangle(const Rectangle &, const Movement &)> move;
-  */
 } // namespace Settings
 
 #endif

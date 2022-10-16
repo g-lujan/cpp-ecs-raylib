@@ -1,6 +1,5 @@
 #include "ecs.hpp"
 
 namespace Setup {
-  void players(ECS &ecs);
-  bool map(ECS &ecs, const Resources::Map map);
+  void players(ECS &ecs, Resources::Manager &resources_manager);
 } // namespace Setup

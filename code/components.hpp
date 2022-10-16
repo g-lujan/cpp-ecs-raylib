@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "resources.hpp"
 
+#include <algorithm>
 #include <cfloat>
 #include <functional>
 #include <ranges>
@@ -11,7 +12,6 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>
 
 struct Component {
   unsigned long long entity_id;
@@ -65,16 +65,20 @@ enum class Body_Type {
   Sprite, // to delete when position and body decoupled
 };
 
-enum class Movement_Type {
-  IDLE,
-  WALK,
-  JUMPING,
+struct Position : public Component {
+  float x;
+  float y;
+};
+
+struct Velocity : public Component {
+  float x;
+  float y;
 };
 
 // change to collider
-struct Body : public Component {
-  Body(Rectangle rect, Body_Type type) : rect{rect}, type{type}, rot{0.f}, colliding{false}, closest_x{FLT_MAX}, closest_y{FLT_MAX} {}
-  Rectangle rect; // change to bound
+struct Collider : public Component {
+  Collider(Rectangle rect, Body_Type type) : rect{rect}, type{type}, rot{0.f}, colliding{false}, closest_x{FLT_MAX}, closest_y{FLT_MAX} {}
+  Rectangle rect;
   Body_Type type;
   float rot;
   bool colliding;
@@ -89,36 +93,31 @@ struct Health : public Component {
 };
 
 struct Anim : public Component {
-  Anim(Resources::Animation_Type type) : type{type} { anim = Resources::animations[type][KEY_NULL]; }
-  Resources::Animation_Type type;
-  Resources::Animation anim;
+  Anim(const std::string name, Graphics::Texture *tex, Graphics::Animation_Settings &settings) : name{name}, tex{tex}, settings{settings} {}
+  Graphics::Texture *tex{nullptr};
+  Graphics::Animation_Settings settings;
+  std::string name;
 };
 
 struct View : public Component {
-  View(Camera2D camera, Color tint, bool active, Resources::Map map) : camera{camera}, tint{tint}, active{active}, map{map} {}
+  View(Camera2D camera, Color tint, bool active, std::string map) : camera{camera}, tint{tint}, active{active}, map{map} {}
   Camera2D camera{0};
   Color tint;
-  Resources::Map map;
+  std::string map;
   bool active{false};
 };
 
 struct Tile : public Component {
-  Tile(int tile_num, Resources::Map map) : tile_num{tile_num}, map{map} {}
-  int tile_num;
-  Resources::Map map;
+  Tile(Graphics::Texture *tex, Rectangle src_rect) : tex{tex}, src_rect{src_rect} {}
+  Graphics::Texture *tex{nullptr};
+  Rectangle src_rect;
 };
 
 struct Input : public Component {
   Input(bool active) : active{active} {}
   bool active;
   KeyboardKey key_pressed{KEY_NULL};
-  bool changed;
-};
-
-// Not a component
-struct Movement {
-  Movement_Type type{Movement_Type::IDLE};
-  bool flip{false};
+  bool changed{true};
 };
 
 #endif
