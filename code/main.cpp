@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <stdlib.h>
+#include "map.hpp"
 
 void call_drawing_systems(ECS &ecs)
 {
@@ -28,9 +29,10 @@ int main(void)
       {KEY_LEFT, Resources::Animation(&Resources::textures["player"], Resources::Animation_Type::PLAYER, {0, 32}, 32, 8, true)},
   }};
   ECS ecs;
-  bool loaded_map_successfully = Setup::map(ecs, Resources::Map::HOMETOWN);
+  Map map(Resources::Map::HOMETOWN);
+  map.generate_components(ecs);
   Setup::players(ecs);
-  while (!WindowShouldClose() && loaded_map_successfully) // Detect window close button or ESC key
+  while (!WindowShouldClose() && map.active()) // Detect window close button or ESC key
   {
     // systems executions
     ecs.run_system<System::Input>();
