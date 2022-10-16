@@ -59,7 +59,7 @@ namespace Setup {
     }
     return true;
   }
-  
+
   bool is_valid_tilemap(json &tilemap)
   {
     if (!tilemap.contains("tilesets")) {
@@ -108,29 +108,27 @@ namespace Setup {
     if (tileset_json.empty() || !is_valid_tileset(tileset_json)) {
       return false;
     }
-    // number of columns in the tileset
-    int ncols = tileset_json["imagewidth"].get<int>() / tileset_json["tilewidth"].get<int>();
+
+    int num_tileset_cols = tileset_json["imagewidth"].get<int>() / tileset_json["tilewidth"].get<int>();
     // load png
     Resources::textures.emplace("hometown", Resources::Images::PATH_HOMETOWN);
     Resources::tiles[Resources::Map::HOMETOWN] = {};
     // iterate over tile idxs, spawning tile entities
     for (auto &layer : tilemap_json["layers"]) {
-      int i = 0, j = 0, count = 0;
-      for (auto &datum : layer["data"]) {
-        int tile_idx = datum.get<int>();
-        if (j == tilemap_json["width"].get<int>())
-          i++;
-        j = j % tilemap_json["width"].get<int>();
+      for (int tile_x = 0, tile_y = 0, tile_count = 0; tile_count < layer["data"].size(); ++tile_x, ++tile_count) {
+        if (tile_x == tilemap_json["width"].get<int>()) {
+          tile_y++;
+          tile_x = 0;
+        }
+        int tile_idx = layer["data"][tile_count].get<int>();
         if (tile_idx == 0) {
           Resources::tiles[Resources::Map::HOMETOWN].push_back(Resources::EMPTY_TILE);
         }
         else {
-          Resources::tiles[Resources::Map::HOMETOWN].push_back(
-              Resources::Tile(&Resources::textures["hometown"], {32 * ((tile_idx - 1) % ncols), 32 * (int)((tile_idx - 1) / ncols)}));
+          Resources::tiles[Resources::Map::HOMETOWN].push_back(Resources::Tile(
+              &Resources::textures["hometown"], {32 * ((tile_idx - 1) % num_tileset_cols), 32 * (int)((tile_idx - 1) / num_tileset_cols)}));
         }
-        ecs.spawn_entity(Body({i * 32, j * 32, 32, 32}, Body_Type::Sprite), Tile(count, Resources::Map::HOMETOWN));
-        j++;
-        count++;
+        ecs.spawn_entity(Body({tile_x * 32, tile_y * 32, 32, 32}, Body_Type::Sprite), Tile(tile_count, Resources::Map::HOMETOWN));
       }
     }
   }
