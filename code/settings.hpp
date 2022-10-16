@@ -21,7 +21,7 @@ namespace Settings {
       return rect;
     }
     float dir = movement.flip ? -1 : 1;
-    return (Rectangle){rect.x + (STEP * dir), rect.y, rect.width, rect.height};
+    return Rectangle{rect.x + (STEP * dir), rect.y, rect.width, rect.height};
   };
   /*
   extern std::unordered_map<KeyboardKey, Movement> key_to_movement;

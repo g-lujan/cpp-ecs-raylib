@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 struct Component {
   unsigned long long entity_id;

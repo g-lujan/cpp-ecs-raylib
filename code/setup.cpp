@@ -9,7 +9,7 @@ namespace Setup {
   void players(ECS &ecs)
   {
     ecs.spawn_entity(
-        Body({std::floor(Settings::SCREEN_WIDTH / 4), std::floor(3 * Settings::SCREEN_HEIGHT / 4), 32, 32}, Body_Type::Player),
+        Body({::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4), 32, 32}, Body_Type::Player),
         Health(100, 100),
         Anim(Resources::Animation_Type::PLAYER),
         View(
@@ -125,10 +125,11 @@ namespace Setup {
           Resources::tiles[Resources::Map::HOMETOWN].push_back(Resources::EMPTY_TILE);
         }
         else {
-          Resources::tiles[Resources::Map::HOMETOWN].push_back(Resources::Tile(
-              &Resources::textures["hometown"], {32 * ((tile_idx - 1) % num_tileset_cols), 32 * (int)((tile_idx - 1) / num_tileset_cols)}));
+          Resources::tiles[Resources::Map::HOMETOWN].push_back(Resources::Tile(&Resources::textures["hometown"],
+              {32 * static_cast<float>((tile_idx - 1) % num_tileset_cols), static_cast<float>(32 * (int)((tile_idx - 1) / num_tileset_cols))}
+          ));
         }
-        ecs.spawn_entity(Body({tile_x * 32, tile_y * 32, 32, 32}, Body_Type::Sprite), Tile(tile_count, Resources::Map::HOMETOWN));
+        ecs.spawn_entity(Body({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 32, 32}, Body_Type::Sprite), Tile(tile_count, Resources::Map::HOMETOWN));
       }
     }
   }
