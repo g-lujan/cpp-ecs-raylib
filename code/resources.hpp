@@ -15,6 +15,9 @@ namespace Resources {
     Graphics::Animation_Settings &animation(const std::string anim_name, const KeyboardKey key) { return _animations[anim_name][key]; }
     std::string tilemap_path(const std::string map_name) { return _tilemaps_paths[map_name]; }
 
+    // May implement ways to clear unused stuff from the Manager in the future
+    // For now, the manager will be unique and will serve all views
+
   private:
     std::unordered_map<std::string, Graphics::Texture> _textures;
     std::unordered_map<std::string, std::unordered_map<KeyboardKey, Graphics::Animation_Settings>> _animations;

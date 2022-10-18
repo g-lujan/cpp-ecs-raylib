@@ -1,7 +1,6 @@
 ColumnLimit: 150
 NamespaceIndentation: All
 BreakBeforeBraces: Stroustrup
-AlignAfterOpenBracket: BlockIndent
 BinPackArguments: false
 BinPackParameters: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true # Replace with "PackConstructorInitializers: Never", when switching to clang-format 14.

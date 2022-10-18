@@ -11,9 +11,9 @@ namespace Resources {
     _animations.emplace(std::make_pair(
         "player",
         std::unordered_map<KeyboardKey, Graphics::Animation_Settings>(
-            {std::make_pair(KEY_NULL, Graphics::Animation_Settings(Vector2{0, 0}, 32, 3)),
-             std::make_pair(KEY_RIGHT, Graphics::Animation_Settings(Vector2{0, 32}, 32, 8)),
-             std::make_pair(KEY_LEFT, Graphics::Animation_Settings(Vector2{0, 32}, 32, 8, true))}
+            {std::make_pair(KEY_NULL, Graphics::Animation_Settings(Vector2{0, 0}, 3)),
+             std::make_pair(KEY_RIGHT, Graphics::Animation_Settings(Vector2{0, 32}, 8)),
+             std::make_pair(KEY_LEFT, Graphics::Animation_Settings(Vector2{0, 32}, 8, true))}
         )
     ));
     _tilemaps_paths.emplace("hometown", Paths::HOMETOWN_JSON);

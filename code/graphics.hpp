@@ -2,6 +2,7 @@
 #define _GRAPHICS_H__
 
 #include "raylib.h"
+#include "settings.hpp"
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -24,15 +25,18 @@ namespace Graphics {
 
   struct Animation_Settings {
     Animation_Settings() {}
-    Animation_Settings(Vector2 start_frame_pos, float step, int fps, bool flip = false)
-        : start_frame_pos{start_frame_pos}, curr_frame{start_frame_pos.x, start_frame_pos.y, 32, 32}, step{step}, fps{fps}, flip{flip}
+    Animation_Settings(Vector2 start_frame_pos, int fps, bool flip = false)
+        : start_frame_pos{start_frame_pos},
+          curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
+          fps{fps},
+          flip{flip}
     {
     }
 
     Rectangle curr_frame;
     Vector2 start_frame_pos;
     /* the x step of the animation on the texture */
-    float step;
+    int step{Settings::TILE_SIZE};
     int fps;
     int frames{4};
     /*

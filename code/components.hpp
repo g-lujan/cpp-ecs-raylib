@@ -75,15 +75,13 @@ struct Velocity : public Component {
   float y;
 };
 
-// change to collider
+// TODO: rect x and y should be relative to position
 struct Collider : public Component {
-  Collider(Rectangle rect, Body_Type type) : rect{rect}, type{type}, rot{0.f}, colliding{false}, closest_x{FLT_MAX}, closest_y{FLT_MAX} {}
-  Rectangle rect;
+  Collider(const Rectangle rect, const Body_Type type) : bound{rect}, type{type}, rot{0.f}, colliding{false} {}
+  Rectangle bound;
   Body_Type type;
   float rot;
   bool colliding;
-  float closest_x;
-  float closest_y;
 };
 
 struct Health : public Component {
@@ -100,7 +98,7 @@ struct Anim : public Component {
 };
 
 struct View : public Component {
-  View(Camera2D camera, Color tint, bool active, std::string map) : camera{camera}, tint{tint}, active{active}, map{map} {}
+  View(Camera2D cam, Color tint, bool active, std::string map) : camera{cam}, tint{tint}, active{active}, map{map} {}
   Camera2D camera{0};
   Color tint;
   std::string map;

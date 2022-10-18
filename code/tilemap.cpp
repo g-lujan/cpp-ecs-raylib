@@ -47,6 +47,11 @@ namespace Tilemap {
       return false;
     }
 
+    std::unordered_map<int, bool> is_collider;
+    for (auto &tile : tileset_json["tiles"]) {
+      is_collider.emplace(tile["id"].get<int>()+1, true);
+    }
+
     int num_tileset_cols = tileset_json["imagewidth"].get<int>() / tileset_json["tilewidth"].get<int>();
     // load png
     // iterate over tile idxs, spawning tile entities
@@ -58,19 +63,20 @@ namespace Tilemap {
         }
         int tile_idx = layer["data"][tile_count].get<int>();
         if (tile_idx == 0) {
-          ecs.spawn_entity(
-              Collider({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 32, 32}, Body_Type::Sprite),
-              Tile(&resources_manager.texture("empty"), Rectangle{0.f, 0.f, 0, 0})
-          );
+          ecs.spawn_entity(Collider({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 32, 32}, Body_Type::Sprite),
+                           Tile(&resources_manager.texture("empty"), Rectangle{0.f, 0.f, 0, 0}));
         }
-        else {
+        else if(is_collider.contains(tile_idx)){
           int src_x = 32 * ((tile_idx - 1) % num_tileset_cols);
           int src_y = 32 * (int)((tile_idx - 1) / num_tileset_cols);
-          ecs.spawn_entity(
-              Collider({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 32, 32}, Body_Type::Sprite),
-              Tile(&resources_manager.texture(map_name), Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32})
-          );
-        }
+          ecs.spawn_entity(Collider({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 32, 32}, Body_Type::Wall),
+                           Tile(&resources_manager.texture(map_name), Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32}));
+        } else{
+          int src_x = 32 * ((tile_idx - 1) % num_tileset_cols);
+          int src_y = 32 * (int)((tile_idx - 1) / num_tileset_cols);
+          ecs.spawn_entity(Collider({static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32), 0, 0}, Body_Type::Sprite),
+                           Tile(&resources_manager.texture(map_name), Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32}));
+	}
       }
     }
   }
