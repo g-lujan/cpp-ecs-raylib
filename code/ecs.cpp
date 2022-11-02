@@ -5,8 +5,6 @@
 #include "settings.hpp"
 #include "movement.hpp"
 
-#include <iostream>
-
 template <> void ECS::run_system<System::Tile>()
 {
   Component_Registry<Tile> &tile_registry = component_registry<Tile>();
@@ -84,35 +82,35 @@ template <> void ECS::run_system<System::Physics>()
 
   for (const auto &id : input_registry.all_ids()) {
     auto movement = key_to_movement.at(input_registry.get(id).key_pressed);
-    Rectangle updated_rect = move(body_registry.get(id), movement);
-    bool grounded = body_registry.get(id).grounded;
+    auto &actor_body = body_registry.get(id);
+    Rectangle updated_rect = move(actor_body, movement);
     for (const auto &body_id : body_registry.all_ids()) {
       if (body_id == id) {
         continue;
       }
-      if (body_registry.get(id).type == Body_Type::Player && body_registry.get(body_id).type == Body_Type::Wall) {
-          grounded = body_registry.get(id).bound.y + body_registry.get(id).bound.height == body_registry.get(body_id).bound.y;
-          body_registry.get(id).grounded = grounded;
+      auto &other = body_registry.get(body_id);
+      if (actor_body.type == Body_Type::Player && other.type == Body_Type::Wall) {
+        actor_body.grounded = actor_body.bound.y + actor_body.bound.height == other.bound.y;
       }
-      if (CheckCollisionRecs(updated_rect, body_registry.get(body_id).bound)) {
-        // result depending on body types
-        if (body_registry.get(id).type == Body_Type::Player) {
-          if (body_registry.get(body_id).type == Body_Type::Wall) {
-            Side collision_side = get_collision_side(updated_rect, body_registry.get(body_id).bound);
+      if (CheckCollisionRecs(updated_rect, other.bound)) {
+        if (actor_body.type == Body_Type::Player) {
+          if (other.type == Body_Type::Wall) {
+            Side collision_side = get_collision_side(updated_rect, other.bound);
             if (collision_side == Side::LEFT || collision_side == Side::RIGHT) {
-              updated_rect.x = body_registry.get(id).bound.x;
+              updated_rect.x = actor_body.bound.x;
             }
           }
-          else if (body_registry.get(body_id).type == Body_Type::Sprite) {
+          else if (other.type == Body_Type::Sprite) {
             continue;
           }
         }
       }
     }
-    if (!grounded) {
+    // apply gravity
+    if (!actor_body.grounded) {
       updated_rect.y += Settings::STEP * 2;
     }
-    body_registry.get(id).bound = updated_rect;
+    actor_body.bound = updated_rect;
   }
 }
 
