@@ -3,6 +3,9 @@
 #include "raymath.h"
 #include "resources.hpp"
 #include "settings.hpp"
+#include "movement.hpp"
+
+#include <iostream>
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -16,13 +19,15 @@ template <> void ECS::run_system<System::Tile>()
       continue;
     }
     auto &curr_body = body_registry.get(view_id);
+    // update camera
     curr_view.camera.target = {curr_body.bound.x, curr_body.bound.y};
     BeginMode2D(curr_view.camera);
+    // draw tiles
     for (const auto &tile_id : tile_registry.all_ids()) {
-      auto &tile = tile_registry.get(tile_id);
       Vector2 position = {body_registry.get(tile_id).bound.x, body_registry.get(tile_id).bound.y};
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 8) {
+        auto &tile = tile_registry.get(tile_id);
         tile.tex->draw(tile.src_rect, position, curr_view.tint);
       }
     }
@@ -78,33 +83,34 @@ template <> void ECS::run_system<System::Physics>()
   Component_Registry<Input> &input_registry = component_registry<Input>();
 
   for (const auto &id : input_registry.all_ids()) {
-    auto movement = Settings::key_to_movement.at(input_registry.get(id).key_pressed);
-    Rectangle updated_rect = Settings::move(body_registry.get(id).bound, movement);
-    updated_rect.y += 1;
+    auto movement = key_to_movement.at(input_registry.get(id).key_pressed);
+    Rectangle updated_rect = move(body_registry.get(id), movement);
+    bool grounded = body_registry.get(id).grounded;
     for (const auto &body_id : body_registry.all_ids()) {
       if (body_id == id) {
         continue;
       }
+      if (body_registry.get(id).type == Body_Type::Player && body_registry.get(body_id).type == Body_Type::Wall) {
+          grounded = body_registry.get(id).bound.y + body_registry.get(id).bound.height == body_registry.get(body_id).bound.y;
+          body_registry.get(id).grounded = grounded;
+      }
       if (CheckCollisionRecs(updated_rect, body_registry.get(body_id).bound)) {
         // result depending on body types
         if (body_registry.get(id).type == Body_Type::Player) {
-          if (body_registry.get(body_id).type == Body_Type::Enemy) {
-          }
-          else if (body_registry.get(body_id).type == Body_Type::Wall) {
-            if (updated_rect.y < body_registry.get(body_id).bound.y) {
-              updated_rect.y = body_registry.get(id).bound.y;
+          if (body_registry.get(body_id).type == Body_Type::Wall) {
+            Side collision_side = get_collision_side(updated_rect, body_registry.get(body_id).bound);
+            if (collision_side == Side::LEFT || collision_side == Side::RIGHT) {
+              updated_rect.x = body_registry.get(id).bound.x;
             }
-            else {
-              return;
-            }
-          }
-          else if (body_registry.get(body_id).type == Body_Type::Door) {
           }
           else if (body_registry.get(body_id).type == Body_Type::Sprite) {
-            break;
+            continue;
           }
         }
       }
+    }
+    if (!grounded) {
+      updated_rect.y += Settings::STEP * 2;
     }
     body_registry.get(id).bound = updated_rect;
   }

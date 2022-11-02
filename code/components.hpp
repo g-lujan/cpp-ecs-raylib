@@ -82,6 +82,7 @@ struct Collider : public Component {
   Body_Type type;
   float rot;
   bool colliding;
+  bool grounded;
 };
 
 struct Health : public Component {
