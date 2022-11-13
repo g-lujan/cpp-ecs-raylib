@@ -1,9 +1,9 @@
 #pragma once
-#include <unordered_map>
-#include <functional>
-#include <raylib.h>
 #include "components.hpp"
 #include <algorithm>
+#include <functional>
+#include <raylib.h>
+#include <unordered_map>
 
 struct Movement {
   bool flip{false};
@@ -20,27 +20,17 @@ const std::unordered_map<KeyboardKey, Movement> key_to_movement{
 };
 
 const std::function<Rectangle(Collider &, const Movement &)> move = [](Collider &collider, const Movement &movement) {
-  if (!movement.move) {
-    return collider.bound;
-  }
-  if (movement.jump) {
-    if (collider.grounded) {
-      collider.grounded = false;
-      return Rectangle{collider.bound.x, collider.bound.y - Settings::STEP * 50, collider.bound.width, collider.bound.height};
-    }
-    return collider.bound;
+  Rectangle res = collider.bound;
+  if (movement.jump && collider.grounded) {
+    collider.grounded = false;
+    res.y -= Settings::STEP * 50;
   }
   float dir = movement.flip ? -1 : 1;
-  return Rectangle{collider.bound.x + (Settings::STEP * dir), collider.bound.y, collider.bound.width, collider.bound.height};
+  res.x += Settings::STEP * dir;
+  return res;
 };
 
-enum Side {
-    RIGHT,
-    LEFT,
-    TOP, 
-    BOTTON,
-    NONE
-};
+enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
 
 const std::function<Side(const Rectangle &rect, const Rectangle &other)> get_collision_side = [](const Rectangle &rect, const Rectangle &other) {
   int amtRight = (rect.x + rect.width) - other.x;

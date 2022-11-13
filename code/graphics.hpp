@@ -25,14 +25,16 @@ namespace Graphics {
 
   struct Animation_Settings {
     Animation_Settings() {}
-    Animation_Settings(Vector2 start_frame_pos, int fps, bool flip = false)
-        : start_frame_pos{start_frame_pos},
-          curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
-          fps{fps},
-          flip{flip}
+    Animation_Settings(std::string name, Vector2 start_frame_pos, int fps, bool flip = false) : 
+        name {name},
+        start_frame_pos{start_frame_pos},
+        curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
+        fps{fps},
+        flip{flip}
     {
     }
 
+    std::string name;
     Rectangle curr_frame;
     Vector2 start_frame_pos;
     /* the x step of the animation on the texture */

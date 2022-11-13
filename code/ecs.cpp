@@ -1,9 +1,9 @@
 #include "ecs.hpp"
+#include "movement.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "resources.hpp"
 #include "settings.hpp"
-#include "movement.hpp"
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -51,8 +51,20 @@ template <> void ECS::run_system<System::Animation>()
     for (const auto &anim_id : anim_registry.all_ids_ordered()) {
       // Update frame
       auto &curr_anim = anim_registry.get(anim_id);
-      if (input_registry.has(anim_id) && input_registry.get(anim_id).changed) {
-        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, input_registry.get(anim_id).key_pressed);
+      auto &keys_pressed = input_registry.get(anim_id).keys_pressed;
+      if (keys_pressed.empty()) {
+        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_NULL);
+      }
+      for (KeyboardKey &key : keys_pressed) {
+        if (input_registry.has(anim_id)) {
+          auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+          // check if anim has changed
+          if (new_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
+              new_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
+            // update animation
+            curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+          }
+        }
       }
       // Draw frame
       Vector2 position = {body_registry.get(anim_id).bound.x, body_registry.get(anim_id).bound.y};
@@ -81,70 +93,67 @@ template <> void ECS::run_system<System::Physics>()
   Component_Registry<Input> &input_registry = component_registry<Input>();
 
   for (const auto &id : input_registry.all_ids()) {
-    auto movement = key_to_movement.at(input_registry.get(id).key_pressed);
     auto &actor_body = body_registry.get(id);
-    Rectangle updated_rect = move(actor_body, movement);
+    // process movement
+    auto &keys_pressed = input_registry.get(id).keys_pressed;
+    Collider collider_updated = actor_body;
+    for (const KeyboardKey &key : keys_pressed) {
+      auto &movement = key_to_movement.at(key);
+      collider_updated.bound = move(collider_updated, movement);
+    }
     for (const auto &body_id : body_registry.all_ids()) {
       if (body_id == id) {
         continue;
       }
       auto &other = body_registry.get(body_id);
-      if (actor_body.type == Body_Type::Player && other.type == Body_Type::Wall) {
-        actor_body.grounded = actor_body.bound.y + actor_body.bound.height == other.bound.y;
-      }
-      if (CheckCollisionRecs(updated_rect, other.bound)) {
-        if (actor_body.type == Body_Type::Player) {
-          if (other.type == Body_Type::Wall) {
-            Side collision_side = get_collision_side(updated_rect, other.bound);
-            if (collision_side == Side::LEFT || collision_side == Side::RIGHT) {
-              updated_rect.x = actor_body.bound.x;
+      if (CheckCollisionRecs(collider_updated.bound, other.bound)) {
+        if (actor_body.type == Body_Type::Player && other.type == Body_Type::Wall) {
+            switch (get_collision_side(collider_updated.bound, other.bound)) {
+            case Side::LEFT:
+            case Side::RIGHT:
+              collider_updated.bound.x = actor_body.bound.x;
+              break;
+            case Side::BOTTON:
+              collider_updated.grounded = true;
+              break;
+            default:
+              break;
             }
-          }
-          else if (other.type == Body_Type::Sprite) {
-            continue;
-          }
         }
       }
     }
     // apply gravity
-    if (!actor_body.grounded) {
-      updated_rect.y += Settings::STEP * 2;
+    if (!collider_updated.grounded) {
+      collider_updated.bound.y += Settings::STEP;
     }
-    actor_body.bound = updated_rect;
+    actor_body = collider_updated;
   }
 }
 
-static KeyboardKey key_down()
+static std::vector<KeyboardKey> keys_down(void)
 {
-  if (IsKeyDown(KEY_RIGHT))
-    return KEY_RIGHT;
-  if (IsKeyDown(KEY_LEFT))
-    return KEY_LEFT;
-  if (IsKeyDown(KEY_SPACE))
-    return KEY_SPACE;
-  /* To Implement
-  if (IsKeyDown(KEY_UP))
-    return KEY_UP;
-  if (IsKeyDown(KEY_DOWN))
-    return KEY_DOWN;
-  */
-  return KEY_NULL;
+  std::vector<KeyboardKey> keys;
+  if (IsKeyDown(KEY_LEFT)) {
+    keys.push_back(KEY_LEFT);
+  }
+  if (IsKeyDown(KEY_RIGHT)) {
+    keys.push_back(KEY_RIGHT);
+  }
+  if (IsKeyDown(KEY_SPACE)) {
+    keys.push_back(KEY_SPACE);
+  }
+  return keys;
 }
 
+// register input
 template <> void ECS::run_system<System::Input>()
 {
   Component_Registry<Input> &input_registry = component_registry<Input>();
+  std::vector<KeyboardKey> curr_keys = keys_down();
   for (const auto &id : input_registry.all_ids()) {
     if (!input_registry.get(id).active) {
       continue;
     }
-    KeyboardKey key_pressed = key_down();
-    if (key_pressed == input_registry.get(id).key_pressed) {
-      input_registry.get(id).changed = false;
-    }
-    else {
-      input_registry.get(id).key_pressed = key_pressed;
-      input_registry.get(id).changed = true;
-    }
+    input_registry.get(id).keys_pressed = curr_keys;
   }
 }

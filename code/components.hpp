@@ -12,6 +12,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+#include <stack>
 
 struct Component {
   unsigned long long entity_id;
@@ -115,7 +116,7 @@ struct Tile : public Component {
 struct Input : public Component {
   Input(bool active) : active{active} {}
   bool active;
-  KeyboardKey key_pressed{KEY_NULL};
+  std::vector<KeyboardKey> keys_pressed;
   bool changed{true};
 };
 
