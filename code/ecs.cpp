@@ -8,7 +8,7 @@
 template <> void ECS::run_system<System::Tile>()
 {
   Component_Registry<Tile> &tile_registry = component_registry<Tile>();
-  Component_Registry<Collider> &body_registry = component_registry<Collider>();
+  Component_Registry<Position> &pos_registry = component_registry<Position>();
   Component_Registry<View> &view_registry = component_registry<View>();
 
   for (const auto &view_id : view_registry.all_ids()) {
@@ -16,13 +16,13 @@ template <> void ECS::run_system<System::Tile>()
     if (!curr_view.active) {
       continue;
     }
-    auto &curr_body = body_registry.get(view_id);
+    auto &curr_pos = pos_registry.get(view_id);
     // update camera
-    curr_view.camera.target = {curr_body.bound.x, curr_body.bound.y};
+    curr_view.camera.target = {curr_pos.x, curr_pos.y};
     BeginMode2D(curr_view.camera);
     // draw tiles
     for (const auto &tile_id : tile_registry.all_ids()) {
-      Vector2 position = {body_registry.get(tile_id).bound.x, body_registry.get(tile_id).bound.y};
+      Vector2 position = {pos_registry.get(tile_id).x, pos_registry.get(tile_id).y};
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 8) {
         auto &tile = tile_registry.get(tile_id);
@@ -49,24 +49,7 @@ template <> void ECS::run_system<System::Animation>()
     curr_view.camera.target = {curr_body.bound.x, curr_body.bound.y};
     BeginMode2D(curr_view.camera);
     for (const auto &anim_id : anim_registry.all_ids_ordered()) {
-      // Update frame
       auto &curr_anim = anim_registry.get(anim_id);
-      auto &keys_pressed = input_registry.get(anim_id).keys_pressed;
-      if (keys_pressed.empty()) {
-        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_NULL);
-      }
-      for (KeyboardKey &key : keys_pressed) {
-        if (input_registry.has(anim_id)) {
-          auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, key);
-          // check if anim has changed
-          if (new_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
-              new_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
-            // update animation
-            curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, key);
-          }
-        }
-      }
-      // Draw frame
       Vector2 position = {body_registry.get(anim_id).bound.x, body_registry.get(anim_id).bound.y};
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 4) {
@@ -78,11 +61,49 @@ template <> void ECS::run_system<System::Animation>()
   }
 }
 
+template <> void ECS::run_system<System::Player_Animation>() {
+  Component_Registry<Player> &player_registry = component_registry<Player>();
+  Component_Registry<Anim> &anim_registry = component_registry<Anim>();
+  Component_Registry<Input> &input_registry = component_registry<Input>();
+  Component_Registry<Collider> &collider_registry = component_registry<Collider>();
+
+  for (const auto &player_id : player_registry.all_ids()) {
+    auto &curr_anim = anim_registry.get(player_id);
+    auto &keys_pressed = input_registry.get(player_id).keys_pressed;
+    const bool flip = curr_anim.settings.flip;
+    if (!collider_registry.get(player_id).grounded) {
+      auto &jump_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_SPACE);
+      // check if anim has changed
+      if (jump_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
+          jump_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
+        // update animation
+        curr_anim.settings = jump_anim_settings;
+      }
+      curr_anim.settings.flip = flip;
+      return;
+    }
+    else if (keys_pressed.empty()) {
+        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_NULL);
+        curr_anim.settings.flip = flip;
+    }
+    for (KeyboardKey &key : keys_pressed) {
+        auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+        // check if anim has changed
+        if (new_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
+            new_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
+            // update animation
+            curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+        }
+    }
+  }
+}
+
 template <> void ECS::run_system<System::Draw>()
 {
   BeginDrawing();
   ClearBackground(BLACK);
   run_system<System::Tile>();
+  run_system<System::Player_Animation>();
   run_system<System::Animation>();
   EndDrawing();
 }
@@ -91,6 +112,7 @@ template <> void ECS::run_system<System::Physics>()
 {
   Component_Registry<Collider> &body_registry = component_registry<Collider>();
   Component_Registry<Input> &input_registry = component_registry<Input>();
+  Component_Registry<Position> &pos_registry = component_registry<Position>();
 
   for (const auto &id : input_registry.all_ids()) {
     auto &actor_body = body_registry.get(id);
@@ -126,6 +148,9 @@ template <> void ECS::run_system<System::Physics>()
     if (!collider_updated.grounded) {
       collider_updated.bound.y += Settings::STEP;
     }
+    auto &curr_pos = pos_registry.get(id);
+    curr_pos.x = collider_updated.bound.x;
+    curr_pos.y = collider_updated.bound.y;
     actor_body = collider_updated;
   }
 }

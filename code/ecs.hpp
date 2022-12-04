@@ -9,7 +9,9 @@
 
 // TODO find solution where you don't need to keep track of all types of Components in the variant
 using Component_Registry_Types = std::variant<
+    Component_Registry<Player>,
     Component_Registry<Health>,
+    Component_Registry<Position>,
     Component_Registry<Collider>,
     Component_Registry<Anim>,
     Component_Registry<View>,
@@ -22,6 +24,7 @@ namespace System {
   struct Draw {};
   struct Animation {};
   struct Tile {};
+  struct Player_Animation{};
 } // namespace System
 
 class ECS {

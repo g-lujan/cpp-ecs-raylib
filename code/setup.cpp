@@ -7,7 +7,7 @@
 namespace Setup {
   void players(ECS &ecs, Resources::Manager &resources_manager)
   {
-    ecs.spawn_entity(
+    ecs.spawn_entity(Position(::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4)),
         Collider({::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4), Settings::TILE_SIZE, Settings::TILE_SIZE},
                  Body_Type::Player),
         Health(100, 100),
@@ -15,14 +15,17 @@ namespace Setup {
         View({{Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4},
               {Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4},
               0.f,
-              Settings::DEFAULT_ZOOM},
+              Settings::DEFAULT_ZOOM
+            },
             WHITE,
             true,
             "hometown"
         ),
-        Input(true));
+        Input(true),
+        Player());
 
     ecs.spawn_entity(
+        Position(3 * Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4),
         Collider({3 * Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4, Settings::TILE_SIZE, Settings::TILE_SIZE}, Body_Type::Player),
         Health(100, 100),
         Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
@@ -35,7 +38,8 @@ namespace Setup {
             true,
             "hometown"
         ),
-        Input(false));
+        Input(false),
+        Player());
   }
 
 } // namespace Setup

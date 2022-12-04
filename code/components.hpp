@@ -67,6 +67,7 @@ enum class Body_Type {
 };
 
 struct Position : public Component {
+  Position(float x, float y) : x{x}, y{y} {}
   float x;
   float y;
 };
@@ -83,7 +84,7 @@ struct Collider : public Component {
   Body_Type type;
   float rot;
   bool colliding;
-  bool grounded;
+  bool grounded{false};
 };
 
 struct Health : public Component {
@@ -91,6 +92,8 @@ struct Health : public Component {
   int curr;
   int max;
 };
+
+struct Player : public Component {};
 
 struct Anim : public Component {
   Anim(const std::string name, Graphics::Texture *tex, Graphics::Animation_Settings &settings) : name{name}, tex{tex}, settings{settings} {}

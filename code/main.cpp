@@ -10,7 +10,7 @@ int main(void)
   InitWindow(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT, Settings::TITLE);
   SetTargetFPS(Settings::FPS);
   ECS ecs;
-  bool loaded_map = Tilemap::load(ecs, Resources::get_resource_manager(), "hometown");
+  bool loaded_map = Tilemap::load(ecs, "hometown");
   Setup::players(ecs, Resources::get_resource_manager());
   while (!WindowShouldClose() && loaded_map)
   {

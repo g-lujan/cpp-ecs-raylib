@@ -23,7 +23,7 @@ const std::function<Rectangle(Collider &, const Movement &)> move = [](Collider 
   Rectangle res = collider.bound;
   if (movement.jump && collider.grounded) {
     collider.grounded = false;
-    res.y -= Settings::STEP * 50;
+    res.y -= Settings::STEP * 100;
   }
   float dir = movement.flip ? -1 : 1;
   res.x += Settings::STEP * dir;

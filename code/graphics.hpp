@@ -25,16 +25,18 @@ namespace Graphics {
 
   struct Animation_Settings {
     Animation_Settings() {}
-    Animation_Settings(std::string name, Vector2 start_frame_pos, int fps, bool flip = false) : 
-        name {name},
+    Animation_Settings(std::string name, Vector2 start_frame_pos, int fps, bool flip = false, bool default_to_idle = true)
+        : 
+        action {name},
         start_frame_pos{start_frame_pos},
         curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
         fps{fps},
-        flip{flip}
+        flip{flip},
+        default_to_idle{default_to_idle}
     {
     }
 
-    std::string name;
+    std::string action;
     Rectangle curr_frame;
     Vector2 start_frame_pos;
     /* the x step of the animation on the texture */
@@ -48,6 +50,8 @@ namespace Graphics {
      */
     int frames_counter = 0;
     bool flip;
+    // defines if when no key is pressed, it should go to the idle animation or keep running
+    bool default_to_idle = true;
   };
 
   void step(Animation_Settings &settings);
