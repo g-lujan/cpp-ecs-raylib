@@ -21,6 +21,7 @@ set(SOURCE_FILES
 	code/graphics.hpp
 	code/tilemap.cpp
 	code/tilemap.hpp
+	code/movement.hpp
     external/json.hpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources/images DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources")

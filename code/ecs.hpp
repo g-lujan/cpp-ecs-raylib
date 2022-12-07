@@ -25,6 +25,7 @@ namespace System {
   struct Animation {};
   struct Tile {};
   struct Player_Animation{};
+  struct Player_Movement {};
 } // namespace System
 
 class ECS {

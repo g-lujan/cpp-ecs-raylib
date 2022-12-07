@@ -19,17 +19,6 @@ const std::unordered_map<KeyboardKey, Movement> key_to_movement{
     {KEY_SPACE, {.flip = false, .move = true, .crouch = false, .jump = true}},
 };
 
-const std::function<Rectangle(Collider &, const Movement &)> move = [](Collider &collider, const Movement &movement) {
-  Rectangle res = collider.bound;
-  if (movement.jump && collider.grounded) {
-    collider.grounded = false;
-    res.y -= Settings::STEP * 100;
-  }
-  float dir = movement.flip ? -1 : 1;
-  res.x += Settings::STEP * dir;
-  return res;
-};
-
 enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
 
 const std::function<Side(const Rectangle &rect, const Rectangle &other)> get_collision_side = [](const Rectangle &rect, const Rectangle &other) {

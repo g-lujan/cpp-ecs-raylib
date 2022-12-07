@@ -15,6 +15,7 @@ int main(void)
   while (!WindowShouldClose() && loaded_map)
   {
     ecs.run_system<System::Input>();
+    ecs.run_system<System::Player_Movement>();
     ecs.run_system<System::Physics>();
     ecs.run_system<System::Draw>();
   }
