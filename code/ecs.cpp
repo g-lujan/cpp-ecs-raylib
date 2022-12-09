@@ -71,7 +71,7 @@ template <> void ECS::run_system<System::Player_Animation>() {
     auto &curr_anim = anim_registry.get(player_id);
     auto &keys_pressed = input_registry.get(player_id).keys_pressed;
     const bool flip = curr_anim.settings.flip;
-    if (!collider_registry.get(player_id).grounded) {
+    if (!collider_registry.get(player_id).collision_sides.contains(Side::BOTTON)) {
       auto &jump_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_SPACE);
       // check if anim has changed
       if (jump_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
@@ -117,56 +117,67 @@ template <> void ECS::run_system<System::Player_Movement>() {
     auto &player_body = body_registry.get(id);
     auto &keys_pressed = input_registry.get(id).keys_pressed;
     for (const KeyboardKey &key : keys_pressed) {
+        // apply movement
         auto &movement = key_to_movement.at(key);
-        if (movement.jump && player_body.grounded) {
-            player_body.grounded = false;
+        if (movement.jump && player_body.collision_sides.contains(Side::BOTTON)) {
             player_body.bound.y -= Settings::STEP * 100;
+            player_body.collision_sides.erase(Side::BOTTON);
+            continue;
         }
-        float dir = movement.flip ? -1 : 1;
-        player_body.bound.x += Settings::STEP * dir;
+        if (movement.move && !movement.flip && !player_body.collision_sides.contains(Side::RIGHT)) {
+            player_body.bound.x += Settings::STEP;
+        }
+        if (movement.move && movement.flip && !player_body.collision_sides.contains(Side::LEFT)) {
+            player_body.bound.x -= Settings::STEP;
+        }
     }
   }
 }
 
-template <> void ECS::run_system<System::Physics>()
+template <> void ECS::run_system<System::Collision>()
 {
   Component_Registry<Collider> &body_registry = component_registry<Collider>();
-  Component_Registry<Player> &player_registry = component_registry<Player>();
-  Component_Registry<Position> &pos_registry = component_registry<Position>();
 
-  for (const auto &id : player_registry.all_ids()) {
+  for (const auto &id : body_registry.all_ids()) {
     auto &actor_body = body_registry.get(id);
+    if (!actor_body.kinematic) {
+        continue;
+    }
     for (const auto &body_id : body_registry.all_ids()) {
       if (body_id == id) {
         continue;
       }
       auto &other = body_registry.get(body_id);
       if (CheckCollisionRecs(actor_body.bound, other.bound)) {
-        if (actor_body.type == Body_Type::Player && other.type == Body_Type::Wall) {
-          switch (get_collision_side(actor_body.bound, other.bound)) {
-            case Side::LEFT:
-                actor_body.bound.x += Settings::STEP;
-                break;
-            case Side::RIGHT:
-                actor_body.bound.x -= Settings::STEP;
-                break;
-            case Side::BOTTON:
-                 actor_body.grounded = true;
-                 break;
-            default:
-                 break;
-            }
-        }
+        actor_body.collision_sides.insert(get_collision_side(actor_body.bound, other.bound));
       }
     }
-    // apply gravity
-    if (!actor_body.grounded) {
-      actor_body.bound.y += Settings::STEP;
+  }
+}
+
+template <> void ECS::run_system<System::Kinematics>() { 
+  Component_Registry<Collider> &body_registry = component_registry<Collider>();
+  Component_Registry<Position> &pos_registry = component_registry<Position>();
+  for (const auto &id : body_registry.all_ids()) {
+    auto &body = body_registry.get(id);
+    if (!body.kinematic) {
+      continue;
     }
-    // update position component
+    if (body.collision_sides.contains(Side::LEFT)) {
+      body.bound.x += Settings::STEP;
+      body.collision_sides.erase(Side::LEFT);
+    }
+    if (body.collision_sides.contains(Side::RIGHT)) {
+      body.bound.x -= Settings::STEP;
+      body.collision_sides.erase(Side::RIGHT);
+    }
+    if (!body.collision_sides.contains(Side::BOTTON)) {
+      body.bound.y += Settings::STEP;
+    }
+    // position component
     auto &curr_pos = pos_registry.get(id);
-    curr_pos.x = actor_body.bound.x;
-    curr_pos.y = actor_body.bound.y;
+    curr_pos.x = body.bound.x;
+    curr_pos.y = body.bound.y;
   }
 }
 

@@ -19,7 +19,8 @@ using Component_Registry_Types = std::variant<
     Component_Registry<Tile>>;
 
 namespace System {
-  struct Physics {};
+  struct Collision {};
+  struct Kinematics {};
   struct Input {};
   struct Draw {};
   struct Animation {};

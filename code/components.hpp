@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
-#include <stack>
+#include <unordered_set>
 
 struct Component {
   unsigned long long entity_id;
@@ -77,14 +77,16 @@ struct Velocity : public Component {
   float y;
 };
 
+enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
+
 // TODO: rect x and y should be relative to position
 struct Collider : public Component {
-  Collider(const Rectangle rect, const Body_Type type) : bound{rect}, type{type}, rot{0.f}, colliding{false} {}
+  Collider(const Rectangle rect, const Body_Type type, bool kinematic) : bound{rect}, type{type}, rot{0.f}, kinematic{kinematic} {}
   Rectangle bound;
   Body_Type type;
   float rot;
-  bool colliding;
-  bool grounded{false};
+  bool kinematic;
+  std::unordered_set<Side> collision_sides;
 };
 
 struct Health : public Component {

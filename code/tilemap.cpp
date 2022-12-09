@@ -66,7 +66,7 @@ namespace Tilemap {
       std::string curr = layer["name"].get<std::string>();
       if (layer["name"].get<std::string>() == "Collision") {
         for (auto &object : layer["objects"]) {
-            ecs.spawn_entity(Collider({object["x"].get<float>(), object["y"].get<float>(), object["width"].get<float>(), object["height"].get<float>()}, Body_Type::Wall));
+            ecs.spawn_entity(Collider({object["x"].get<float>(), object["y"].get<float>(), object["width"].get<float>(), object["height"].get<float>()}, Body_Type::Wall, false));
         }
       }
       if (layer["name"].get<std::string>() == "Tiles") {

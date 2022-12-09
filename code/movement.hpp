@@ -16,10 +16,8 @@ const std::unordered_map<KeyboardKey, Movement> key_to_movement{
     {KEY_NULL, {.flip = false, .move = false, .crouch = false, .jump = false}},
     {KEY_RIGHT, {.flip = false, .move = true, .crouch = false, .jump = false}},
     {KEY_LEFT, {.flip = true, .move = true, .crouch = false, .jump = false}},
-    {KEY_SPACE, {.flip = false, .move = true, .crouch = false, .jump = true}},
+    {KEY_SPACE, {.flip = false, .move = false, .crouch = false, .jump = true}},
 };
-
-enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
 
 const std::function<Side(const Rectangle &rect, const Rectangle &other)> get_collision_side = [](const Rectangle &rect, const Rectangle &other) {
   int amtRight = (rect.x + rect.width) - other.x;
