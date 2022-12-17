@@ -21,6 +21,7 @@ set(SOURCE_FILES
 	code/graphics.hpp
 	code/tilemap.cpp
 	code/tilemap.hpp
+	code/movement.cpp
 	code/movement.hpp
     external/json.hpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

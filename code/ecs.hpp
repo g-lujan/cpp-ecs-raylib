@@ -11,7 +11,7 @@
 using Component_Registry_Types = std::variant<
     Component_Registry<Player>,
     Component_Registry<Health>,
-    Component_Registry<Position>,
+    Component_Registry<Kinematics>,
     Component_Registry<Collider>,
     Component_Registry<Anim>,
     Component_Registry<View>,
@@ -19,8 +19,7 @@ using Component_Registry_Types = std::variant<
     Component_Registry<Tile>>;
 
 namespace System {
-  struct Collision {};
-  struct Kinematics {};
+  struct Physics {};
   struct Input {};
   struct Draw {};
   struct Animation {};

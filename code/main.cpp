@@ -16,8 +16,7 @@ int main(void)
   {
     ecs.run_system<System::Input>();
     ecs.run_system<System::Player_Movement>();
-    ecs.run_system<System::Collision>();
-    ecs.run_system<System::Kinematics>();
+    ecs.run_system<System::Physics>();
     ecs.run_system<System::Draw>();
   }
   CloseWindow();

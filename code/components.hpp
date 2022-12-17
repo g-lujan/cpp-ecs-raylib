@@ -66,15 +66,12 @@ enum class Body_Type {
   Sprite, // to delete when position and body decoupled
 };
 
-struct Position : public Component {
-  Position(float x, float y) : x{x}, y{y} {}
-  float x;
-  float y;
-};
-
-struct Velocity : public Component {
-  float x;
-  float y;
+// an idea to create a more compact and useful kinematics component
+struct Kinematics : public Component {
+  Kinematics(Vector2 position) : position{position} {}
+  Vector2 position;
+  Vector2 velocity = {0.f, 0.f};
+  Vector2 acceleration = {0.f, 0.f}; // useful for jumping, for ex
 };
 
 enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
@@ -98,9 +95,10 @@ struct Health : public Component {
 struct Player : public Component {};
 
 struct Anim : public Component {
-  Anim(const std::string name, Graphics::Texture *tex, Graphics::Animation_Settings &settings) : name{name}, tex{tex}, settings{settings} {}
+  Anim(const std::string name, Graphics::Texture *tex, Graphics::Frame &settings) : name{name}, tex{tex}, settings{settings} {}
   Graphics::Texture *tex{nullptr};
-  Graphics::Animation_Settings settings;
+  Graphics::Frame settings;
+  bool flip{false};
   std::string name;
 };
 

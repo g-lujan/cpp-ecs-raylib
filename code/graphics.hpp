@@ -23,15 +23,14 @@ namespace Graphics {
     Texture2D _tex{};
   };
 
-  struct Animation_Settings {
-    Animation_Settings() {}
-    Animation_Settings(std::string name, Vector2 start_frame_pos, int fps, bool flip = false)
+  struct Frame {
+    Frame() {}
+    Frame(std::string name, Vector2 start_frame_pos, int fps)
         : 
         action {name},
         start_frame_pos{start_frame_pos},
         curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
-        fps{fps},
-        flip{flip}
+        fps{fps}
     {
     }
 
@@ -48,10 +47,9 @@ namespace Graphics {
      * we need to increment the current_frame to the next
      */
     int frames_counter = 0;
-    bool flip;
   };
 
-  void step(Animation_Settings &settings);
+  void step(Frame &settings);
 
 } // namespace Graphics
 

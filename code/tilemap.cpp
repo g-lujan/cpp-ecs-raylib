@@ -83,7 +83,7 @@ namespace Tilemap {
         int src_y = 32 * (int)((tile_idx - 1) / num_tileset_cols);
         ecs.spawn_entity(
             Tile(&resources_manager.texture(map_name), Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32}),
-            Position(static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32)));
+            Kinematics(Vector2(static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32))));
         }
       }
     }

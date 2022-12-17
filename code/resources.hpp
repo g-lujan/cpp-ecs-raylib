@@ -12,7 +12,7 @@ namespace Resources {
   public:
     Manager();
     Graphics::Texture &texture(const std::string tex_name) { return _textures[tex_name]; }
-    Graphics::Animation_Settings &animation(const std::string anim_name, const KeyboardKey key) { return _animations[anim_name][key]; }
+    Graphics::Frame &animation(const std::string anim_name, const KeyboardKey key) { return _animations[anim_name][key]; }
     std::string tilemap_path(const std::string map_name) { return _tilemaps_paths[map_name]; }
 
     // May implement ways to clear unused stuff from the Manager in the future
@@ -20,7 +20,7 @@ namespace Resources {
 
   private:
     std::unordered_map<std::string, Graphics::Texture> _textures;
-    std::unordered_map<std::string, std::unordered_map<KeyboardKey, Graphics::Animation_Settings>> _animations;
+    std::unordered_map<std::string, std::unordered_map<KeyboardKey, Graphics::Frame>> _animations;
     std::unordered_map<std::string, std::string> _tilemaps_paths;
   };
 

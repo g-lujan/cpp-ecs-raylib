@@ -23,7 +23,7 @@ namespace Graphics {
     }
   }
 
-  void step(Animation_Settings &settings)
+  void step(Frame &settings)
   {
     if (settings.fps == 0) {
       return;

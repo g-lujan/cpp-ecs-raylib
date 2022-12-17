@@ -7,7 +7,8 @@
 namespace Setup {
   void players(ECS &ecs, Resources::Manager &resources_manager)
   {
-    ecs.spawn_entity(Position(::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4)),
+    ecs.spawn_entity(
+        Kinematics(Vector2(::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4))),
         Collider({::floorf(Settings::SCREEN_WIDTH / 4), ::floorf(3 * Settings::SCREEN_HEIGHT / 4), Settings::TILE_SIZE, Settings::TILE_SIZE},
                  Body_Type::Player, true),
         Health(100, 100),
@@ -22,10 +23,11 @@ namespace Setup {
             "hometown"
         ),
         Input(true),
-        Player());
+        Player()
+    );
 
     ecs.spawn_entity(
-        Position(3 * Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4),
+        Kinematics(Vector2(3 * Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4)),
         Collider({3 * Settings::SCREEN_WIDTH / 4, 3 * Settings::SCREEN_HEIGHT / 4, Settings::TILE_SIZE, Settings::TILE_SIZE}, Body_Type::Player, true),
         Health(100, 100),
         Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
