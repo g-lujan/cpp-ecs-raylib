@@ -3,9 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(game VERSION 0.0.1 DESCRIPTION "A game")
 
-
 find_package(raylib CONFIG REQUIRED)
-find_package(box2d CONFIG REQUIRED)
 
 set(SOURCE_FILES 
 	code/main.cpp 
@@ -28,4 +26,4 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources/images DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources")
 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib opengl32 gdi32 winmm box2d::box2d)
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib opengl32 gdi32 winmm)
