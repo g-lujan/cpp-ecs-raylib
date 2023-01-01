@@ -8,18 +8,18 @@
 
 namespace Graphics {
 
-  void Texture::draw(Rectangle src_rect, Vector2 dest, Color tint, bool flip)
+  void Texture::draw(Rectangle src_rect, Vector2 dest, Color tint, float rotation, Flip flip)
   {
-    if (flip) {
+    if (flip.horizontally || flip.vertically) {
       DrawTexturePro(_tex,
-                     {src_rect.x, src_rect.y, -src_rect.width, src_rect.height},
+                     {src_rect.x, src_rect.y, (flip.horizontally ? -1 : 1) * src_rect.width, (flip.vertically ? -1 : 1) * src_rect.height},
                      {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
                      {0, 0},
-                     0,
+                     rotation,
                      tint);
     }
     else {
-      DrawTexturePro(_tex, src_rect, {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, {0, 0}, 0, tint);
+      DrawTexturePro(_tex, src_rect, {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, {0, 0}, rotation, tint);
     }
   }
 

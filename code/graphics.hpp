@@ -9,6 +9,11 @@
 #include <vector>
 
 namespace Graphics {
+  struct Flip {
+    bool horizontally = false;
+    bool vertically = false;
+  };
+
   class Texture {
   public:
     Texture() {}
@@ -17,7 +22,7 @@ namespace Graphics {
     int &width() { return _tex.width; }
     int &height() { return _tex.height; }
 
-    void draw(Rectangle src_rect, Vector2 dest, Color tint, bool flip = false);
+    void draw(Rectangle src_rect, Vector2 dest, Color tint, float rotation, Flip flip);
 
   private:
     Texture2D _tex{};

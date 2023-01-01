@@ -11,8 +11,8 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 struct Component {
   unsigned long long entity_id;
@@ -98,7 +98,7 @@ struct Anim : public Component {
   Anim(const std::string name, Graphics::Texture *tex, Graphics::Frame &settings) : name{name}, tex{tex}, settings{settings} {}
   Graphics::Texture *tex{nullptr};
   Graphics::Frame settings;
-  bool flip{false};
+  Graphics::Flip flip;
   std::string name;
 };
 
@@ -111,9 +111,15 @@ struct View : public Component {
 };
 
 struct Tile : public Component {
-  Tile(Graphics::Texture *tex, Rectangle src_rect) : tex{tex}, src_rect{src_rect} {}
+  Tile(Graphics::Texture *tex, Rectangle src_rect, Graphics::Flip flip, float rotation = 0.f)
+      : tex{tex}, src_rect{src_rect}, rotation{rotation}, flip{flip}
+  {
+  }
+
   Graphics::Texture *tex{nullptr};
   Rectangle src_rect;
+  float rotation;
+  Graphics::Flip flip;
 };
 
 struct Input : public Component {

@@ -26,7 +26,7 @@ template <> void ECS::run_system<System::Tile>()
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 8) {
         auto &tile = tile_registry.get(tile_id);
-        tile.tex->draw(tile.src_rect, position, curr_view.tint);
+        tile.tex->draw(tile.src_rect, position, curr_view.tint, tile.rotation, tile.flip);
       }
     }
     EndMode2D();
@@ -54,14 +54,15 @@ template <> void ECS::run_system<System::Animation>()
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 4) {
         Graphics::step(curr_anim.settings);
-        curr_anim.tex->draw(curr_anim.settings.curr_frame, position, curr_view.tint, curr_anim.flip);
+        curr_anim.tex->draw(curr_anim.settings.curr_frame, position, curr_view.tint, 0.f, curr_anim.flip);
       }
     }
     EndMode2D();
   }
 }
 
-template <> void ECS::run_system<System::Player_Animation>() {
+template <> void ECS::run_system<System::Player_Animation>()
+{
   Component_Registry<Player> &player_registry = component_registry<Player>();
   Component_Registry<Anim> &anim_registry = component_registry<Anim>();
   Component_Registry<Input> &input_registry = component_registry<Input>();
@@ -70,9 +71,9 @@ template <> void ECS::run_system<System::Player_Animation>() {
   for (const auto &player_id : player_registry.all_ids()) {
     auto &curr_anim = anim_registry.get(player_id);
     auto &keys_pressed = input_registry.get(player_id).keys_pressed;
-    auto& kinematics = kinematics_registry.get(player_id);
-    curr_anim.flip = kinematics.velocity.x != 0.f ? kinematics.velocity.x < 0.f : curr_anim.flip;
-    
+    auto &kinematics = kinematics_registry.get(player_id);
+    curr_anim.flip.horizontally = kinematics.velocity.x < 0.f ? true : kinematics.velocity.x > 0.f ? false : curr_anim.flip.horizontally;
+
     if (kinematics.velocity.y != 0.f) {
       auto &jump_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_SPACE);
       // check if anim has changed
@@ -84,17 +85,17 @@ template <> void ECS::run_system<System::Player_Animation>() {
       return;
     }
     else if (keys_pressed.empty()) {
-        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_NULL);
+      curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, KEY_NULL);
     }
 
     for (KeyboardKey &key : keys_pressed) {
-        auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, key);
-        // check if anim has changed
-        if (new_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
-            new_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
-            // update animation
-            curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, key);
-        }
+      auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+      // check if anim has changed
+      if (new_anim_settings.start_frame_pos.x != curr_anim.settings.start_frame_pos.x ||
+          new_anim_settings.start_frame_pos.y != curr_anim.settings.start_frame_pos.y) {
+        // update animation
+        curr_anim.settings = Resources::get_resource_manager().animation(curr_anim.name, key);
+      }
     }
   }
 }
@@ -109,7 +110,8 @@ template <> void ECS::run_system<System::Draw>()
   EndDrawing();
 }
 
-template <> void ECS::run_system<System::Player_Movement>() {
+template <> void ECS::run_system<System::Player_Movement>()
+{
   Component_Registry<Player> &player_registry = component_registry<Player>();
   Component_Registry<Kinematics> &kinematics_registry = component_registry<Kinematics>();
   Component_Registry<Collider> &body_registry = component_registry<Collider>();
@@ -121,7 +123,7 @@ template <> void ECS::run_system<System::Player_Movement>() {
     auto &kinematics = kinematics_registry.get(id);
     kinematics.velocity.x = 0;
     for (const KeyboardKey &key : keys_pressed) {
-        key_to_movement.at(key)(kinematics, player_body.collision_sides);
+      key_to_movement.at(key)(kinematics, player_body.collision_sides);
     }
     step_kinematics(kinematics);
     player_body.bound.x = kinematics.position.x;
@@ -137,28 +139,28 @@ template <> void ECS::run_system<System::Physics>()
   for (const auto &id : body_registry.all_ids()) {
     auto &body = body_registry.get(id);
     if (!kinematics_registry.has(id)) {
-        continue;
+      continue;
     }
     // register collisions
     body.collision_sides.clear();
     for (const auto &other_id : body_registry.all_ids()) {
-        if (other_id == id) {
-            continue;
-        }
-        auto &other = body_registry.get(other_id);
-        Side collision_side = get_collision_side(body.bound, other.bound);
-        if (collision_side != Side::NONE) {
-            body.collision_sides.insert(collision_side);
-        }
+      if (other_id == id) {
+        continue;
+      }
+      auto &other = body_registry.get(other_id);
+      Side collision_side = get_collision_side(body.bound, other.bound);
+      if (collision_side != Side::NONE) {
+        body.collision_sides.insert(collision_side);
+      }
     }
     // gravity
-    auto& kinematics = kinematics_registry.get(id);
+    auto &kinematics = kinematics_registry.get(id);
     if (!body.collision_sides.contains(Side::BOTTON)) {
-        kinematics.acceleration.y = 50;
+      kinematics.acceleration.y = 40;
     }
     else {
-        kinematics.acceleration.y = 0;
-        kinematics.velocity.y = 0;
+      kinematics.acceleration.y = 0;
+      kinematics.velocity.y = 0;
     }
   }
 }
