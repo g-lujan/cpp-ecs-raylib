@@ -14,12 +14,17 @@ namespace Graphics {
       DrawTexturePro(_tex,
                      {src_rect.x, src_rect.y, (flip.horizontally ? -1 : 1) * src_rect.width, (flip.vertically ? -1 : 1) * src_rect.height},
                      {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
-                     {0, 0},
+                     {Settings::TILE_SIZE / 2, Settings::TILE_SIZE / 2},
                      rotation,
                      tint);
     }
     else {
-      DrawTexturePro(_tex, src_rect, {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, {0, 0}, rotation, tint);
+      DrawTexturePro(_tex,
+                     src_rect,
+                     {dest.x, dest.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
+                     {Settings::TILE_SIZE / 2, Settings::TILE_SIZE / 2},
+                     rotation,
+                     tint);
     }
   }
 
