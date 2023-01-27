@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include "resources.hpp"
 #include "settings.hpp"
-#include "setup.hpp"
 #include "tilemap.hpp"
 
 int main(void)
