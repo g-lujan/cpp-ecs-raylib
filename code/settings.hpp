@@ -11,7 +11,7 @@ namespace Settings {
   inline constexpr int FPS = 60;
   inline constexpr auto TITLE = "Shadow";
   inline constexpr int TILE_SIZE = 32;
-  inline constexpr float DEFAULT_ZOOM = 1.5f;
+  inline constexpr float DEFAULT_ZOOM = 2.5f;
 } // namespace Settings
 
 #endif

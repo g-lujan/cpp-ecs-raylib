@@ -88,6 +88,24 @@ namespace Tilemap {
               Kinematics(Vector2(static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32))));
         }
       }
+      if (layer["name"].get<std::string>() == "Spawn") {
+        for (auto &object : layer["objects"]) {
+          Vector2 spawn_point = {object["x"].get<float>(), object["y"].get<float>()};
+          ecs.spawn_entity(
+              Kinematics(spawn_point),
+              Collider({spawn_point.x, spawn_point.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, Body_Type::Player, true),
+              Health(100, 100),
+              Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
+                           View({{Settings::SCREEN_WIDTH / 2, Settings::SCREEN_HEIGHT / 2}, spawn_point,
+                                 0.f,
+                                 Settings::DEFAULT_ZOOM},
+                                {255, 255, 255, 255},
+                                true,
+                                "hometown"),
+              Input(true),
+              Player());
+        }
+      }
     }
   }
 

@@ -13,8 +13,6 @@ set(SOURCE_FILES
 	code/resources.cpp 
 	code/resources.hpp
 	code/settings.hpp
-	code/setup.cpp 
-	code/setup.hpp
     code/graphics.cpp
 	code/graphics.hpp
 	code/tilemap.cpp
@@ -23,7 +21,7 @@ set(SOURCE_FILES
 	code/movement.hpp
     external/json.hpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-file(COPY resources/images DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/resources")
+file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib opengl32 gdi32 winmm)

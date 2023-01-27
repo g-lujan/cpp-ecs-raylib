@@ -23,11 +23,8 @@ template <> void ECS::run_system<System::Tile>()
     // draw tiles
     for (const auto &tile_id : tile_registry.all_ids()) {
       Vector2 position = {kinematics_registry.get(tile_id).position.x, kinematics_registry.get(tile_id).position.y};
-      float dist_x = std::abs(curr_view.camera.target.x - position.x);
-      if (dist_x < Settings::SCREEN_WIDTH / 8) {
-        auto &tile = tile_registry.get(tile_id);
-        tile.tex->draw(tile.src_rect, position, curr_view.tint, tile.rotation, tile.flip);
-      }
+      auto &tile = tile_registry.get(tile_id);
+      tile.tex->draw(tile.src_rect, position, curr_view.tint, tile.rotation, tile.flip);
     }
     EndMode2D();
   }

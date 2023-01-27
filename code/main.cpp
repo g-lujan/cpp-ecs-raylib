@@ -11,7 +11,6 @@ int main(void)
   SetTargetFPS(Settings::FPS);
   ECS ecs;
   bool loaded_map = Tilemap::load(ecs, "hometown");
-  Setup::players(ecs, Resources::get_resource_manager());
   while (!WindowShouldClose() && loaded_map)
   {
     ecs.run_system<System::Input>();

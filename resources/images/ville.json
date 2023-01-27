@@ -35,6 +35,29 @@
         }, 
         {
          "draworder":"topdown",
+         "id":3,
+         "name":"Spawn",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":13,
+                 "name":"Player",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":97.5,
+                 "y":511
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":2,
          "name":"Collision",
          "objects":[
@@ -132,8 +155,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":3,
- "nextobjectid":12,
+ "nextlayerid":4,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
