@@ -4,6 +4,7 @@
 #include "raymath.h"
 #include "resources.hpp"
 #include "settings.hpp"
+#include "npc.hpp"
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -181,11 +182,16 @@ static std::vector<KeyboardKey> keys_down(void)
 template <> void ECS::run_system<System::Input>()
 {
   Component_Registry<Input> &input_registry = component_registry<Input>();
-  std::vector<KeyboardKey> curr_keys = keys_down();
+  Component_Registry<AI> &ai_registry = component_registry<AI>();
+
   for (const auto &id : input_registry.all_ids()) {
     if (!input_registry.get(id).active) {
       continue;
     }
-    input_registry.get(id).keys_pressed = curr_keys;
+    input_registry.get(id).keys_pressed = keys_down();
+  }
+
+  for (const auto &id : ai_registry.all_ids()) {
+    input_registry.get(id).keys_pressed = NPC::keys_down(ai_registry.get(id));
   }
 }

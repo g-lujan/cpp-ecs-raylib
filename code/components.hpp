@@ -129,4 +129,11 @@ struct Input : public Component {
   bool changed{true};
 };
 
+struct AI : public Component {
+  AI(bool active) : active{active}{}
+  bool active = false;
+  float last_call = 0.f;
+  KeyboardKey last_action = KEY_NULL;
+};
+
 #endif

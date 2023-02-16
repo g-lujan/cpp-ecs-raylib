@@ -19,7 +19,10 @@ set(SOURCE_FILES
 	code/tilemap.hpp
 	code/movement.cpp
 	code/movement.hpp
-    external/json.hpp)
+    external/json.hpp
+	code/npc.cpp
+	code/npc.hpp
+)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
 

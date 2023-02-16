@@ -49,6 +49,30 @@
                  "width":0,
                  "x":97.5,
                  "y":511
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":14,
+                 "name":"Enemy1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":511
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":15,
+                 "name":"Enemy1",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":274,
+                 "y":510
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -156,7 +180,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":14,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

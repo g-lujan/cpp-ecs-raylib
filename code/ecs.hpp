@@ -16,6 +16,7 @@ using Component_Registry_Types = std::variant<
     Component_Registry<Anim>,
     Component_Registry<View>,
     Component_Registry<Input>,
+    Component_Registry<AI>,
     Component_Registry<Tile>>;
 
 namespace System {
