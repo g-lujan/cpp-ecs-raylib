@@ -4,20 +4,11 @@
 #include <typeindex>
 #include <unordered_map>
 #include <variant>
+#include <ranges>
 
-#include "components.hpp"
-
-// TODO find solution where you don't need to keep track of all types of Components in the variant
-using Component_Registry_Types = std::variant<
-    Component_Registry<Player>,
-    Component_Registry<Health>,
-    Component_Registry<Kinematics>,
-    Component_Registry<Collider>,
-    Component_Registry<Anim>,
-    Component_Registry<View>,
-    Component_Registry<Input>,
-    Component_Registry<AI>,
-    Component_Registry<Tile>>;
+#include "component_registry_types.hpp"
+#include "serialization.hpp"
+#include "../external/json.hpp"
 
 namespace System {
   struct Physics {};
@@ -75,6 +66,23 @@ public:
   template <typename T> Component_Registry<T> &component_registry() { return std::get<Component_Registry<T>>(_component_registries[typeid(T)]); }
 
   template <typename T> void run_system();
+
+  void serialize()
+  {
+    auto component_registries_values = std::views::values(_component_registries);
+    std::vector<Component_Registry_Types> registries = {component_registries_values.begin(), component_registries_values.end()};
+    nlohmann::json output;
+    
+    for (auto &&[id, to_purge] : _entities) {
+      if (to_purge) {
+        continue;
+      }
+      for (auto &registry : registries) {
+        do_serialize(id, output, registry);
+      }
+    }
+    save(output);
+  }
 
 private:
   std::unordered_map<unsigned long long, bool> _entities;

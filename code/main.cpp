@@ -17,6 +17,7 @@ int main(void)
     ecs.run_system<System::Physics>();
     ecs.run_system<System::Draw>();
   }
+  ecs.serialize();
   CloseWindow();
   return 0;
 }

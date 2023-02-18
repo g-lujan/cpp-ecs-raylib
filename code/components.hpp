@@ -16,6 +16,7 @@
 
 struct Component {
   unsigned long long entity_id;
+  virtual std::string type_name() const = 0;
 };
 
 template <typename T> class Component_Registry {
@@ -72,6 +73,10 @@ struct Kinematics : public Component {
   Vector2 position;
   Vector2 velocity = {0.f, 0.f};
   Vector2 acceleration = {0.f, 0.f}; // useful for jumping, for ex
+  virtual std::string type_name() const
+  {
+    return "Kinematics";
+  }
 };
 
 enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
@@ -84,15 +89,19 @@ struct Collider : public Component {
   float rot;
   bool kinematic;
   std::unordered_set<Side> collision_sides;
+  virtual std::string type_name() const { return "Collider"; }
 };
 
 struct Health : public Component {
   Health(int curr, int max) : curr{curr}, max{max} {}
   int curr;
   int max;
+  virtual std::string type_name() const { return "Health"; }
 };
 
-struct Player : public Component {};
+struct Player : public Component {
+  virtual std::string type_name() const { return "Player"; }
+};
 
 struct Anim : public Component {
   Anim(const std::string name, Graphics::Texture *tex, Graphics::Frame &settings) : name{name}, tex{tex}, settings{settings} {}
@@ -100,6 +109,7 @@ struct Anim : public Component {
   Graphics::Frame settings;
   Graphics::Flip flip;
   std::string name;
+  virtual std::string type_name() const { return "Anim"; }
 };
 
 struct View : public Component {
@@ -108,6 +118,7 @@ struct View : public Component {
   Color tint;
   std::string map;
   bool active{false};
+  virtual std::string type_name() const { return "View"; }
 };
 
 struct Tile : public Component {
@@ -120,6 +131,7 @@ struct Tile : public Component {
   Rectangle src_rect;
   float rotation;
   Graphics::Flip flip;
+  virtual std::string type_name() const { return "Tile"; }
 };
 
 struct Input : public Component {
@@ -127,6 +139,7 @@ struct Input : public Component {
   bool active;
   std::vector<KeyboardKey> keys_pressed;
   bool changed{true};
+  virtual std::string type_name() const { return "Input"; }
 };
 
 struct AI : public Component {
@@ -134,6 +147,7 @@ struct AI : public Component {
   bool active = false;
   float last_call = 0.f;
   KeyboardKey last_action = KEY_NULL;
+  virtual std::string type_name() const { return "AI"; }
 };
 
 #endif
