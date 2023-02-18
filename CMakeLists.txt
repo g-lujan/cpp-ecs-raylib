@@ -22,6 +22,8 @@ set(SOURCE_FILES
     external/json.hpp
 	code/npc.cpp
 	code/npc.hpp
+	code/serialization.cpp
+	code/serialization.hpp
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
