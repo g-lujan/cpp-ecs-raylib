@@ -16,6 +16,7 @@
 
 struct Component {
   unsigned long long entity_id;
+  bool serializable = false;
   virtual std::string type_name() const = 0;
 };
 
@@ -93,13 +94,15 @@ struct Collider : public Component {
 };
 
 struct Health : public Component {
-  Health(int curr, int max) : curr{curr}, max{max} {}
+  Health(int curr, int max) : curr{curr}, max{max} { serializable = true;  }
+
   int curr;
   int max;
   virtual std::string type_name() const { return "Health"; }
 };
 
 struct Player : public Component {
+  Player() { serializable = true; }
   virtual std::string type_name() const { return "Player"; }
 };
 

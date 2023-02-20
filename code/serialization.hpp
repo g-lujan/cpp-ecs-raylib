@@ -5,7 +5,7 @@
 #include "components.hpp"
 #include "component_registry_types.hpp"
 
-
+template <typename T> void serialize_component(nlohmann::json &output, T &component);
 
 void do_serialize(unsigned long long id, nlohmann::json &output, Component_Registry_Types &registry);
 void save(nlohmann::json &output);

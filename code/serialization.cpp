@@ -8,8 +8,10 @@ template <typename T> void serialize_component(unsigned long long id, nlohmann::
 {
   if (registry.has(id)) {
     T component = registry.get(id);
-    nlohmann::json j = component;
-    output[std::to_string(id)][component.type_name()] = j;
+    if (component.serializable) {
+        nlohmann::json j = component;
+        output[std::to_string(id)][component.type_name()] = j;
+    }
   }
 }
 
