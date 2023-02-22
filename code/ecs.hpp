@@ -18,6 +18,8 @@ namespace System {
   struct Tile {};
   struct Player_Animation{};
   struct Player_Movement {};
+  struct InGameMenu {};
+  struct AI {};
 } // namespace System
 
 class ECS {

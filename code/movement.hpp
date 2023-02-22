@@ -14,6 +14,7 @@ void jump(Kinematics &kinematics, std::unordered_set<Side> &collision_sides);
 
 const std::unordered_map<KeyboardKey, std::function<void(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)>> key_to_movement{
     {KEY_NULL, idle},
+    {KEY_ENTER, idle},
     {KEY_RIGHT, move_right},
     {KEY_LEFT, move_left}, 
     {KEY_SPACE, jump}

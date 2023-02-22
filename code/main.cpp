@@ -3,6 +3,7 @@
 #include "resources.hpp"
 #include "settings.hpp"
 #include "tilemap.hpp"
+#include "time.hpp"
 
 int main(void)
 {
@@ -12,12 +13,15 @@ int main(void)
   bool loaded_map = Tilemap::load(ecs, "hometown");
   while (!WindowShouldClose() && loaded_map)
   {
+    cap_framerate();
+    // order matters
     ecs.run_system<System::Input>();
+    ecs.run_system<System::AI>();
+    ecs.run_system<System::InGameMenu>();
     ecs.run_system<System::Player_Movement>();
     ecs.run_system<System::Physics>();
     ecs.run_system<System::Draw>();
   }
-  ecs.serialize();
   CloseWindow();
   return 0;
 }

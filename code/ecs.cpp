@@ -5,6 +5,8 @@
 #include "resources.hpp"
 #include "settings.hpp"
 #include "npc.hpp"
+#include "time.hpp"
+#include <algorithm>
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -36,7 +38,6 @@ template <> void ECS::run_system<System::Animation>()
   Component_Registry<Anim> &anim_registry = component_registry<Anim>();
   Component_Registry<Collider> &body_registry = component_registry<Collider>();
   Component_Registry<View> &view_registry = component_registry<View>();
-  Component_Registry<Input> &input_registry = component_registry<Input>();
 
   for (const auto &view_id : view_registry.all_ids()) {
     auto &curr_view = view_registry.get(view_id);
@@ -163,7 +164,7 @@ template <> void ECS::run_system<System::Physics>()
   }
 }
 
-static std::vector<KeyboardKey> keys_down(void)
+std::vector<KeyboardKey> keys_down(void)
 {
   std::vector<KeyboardKey> keys;
   if (IsKeyDown(KEY_LEFT)) {
@@ -175,6 +176,9 @@ static std::vector<KeyboardKey> keys_down(void)
   if (IsKeyDown(KEY_SPACE)) {
     keys.push_back(KEY_SPACE);
   }
+  if (IsKeyPressed(KEY_ENTER)) {
+    keys.push_back(KEY_ENTER);
+  }
   return keys;
 }
 
@@ -182,16 +186,48 @@ static std::vector<KeyboardKey> keys_down(void)
 template <> void ECS::run_system<System::Input>()
 {
   Component_Registry<Input> &input_registry = component_registry<Input>();
-  Component_Registry<AI> &ai_registry = component_registry<AI>();
-
   for (const auto &id : input_registry.all_ids()) {
     if (!input_registry.get(id).active) {
       continue;
     }
     input_registry.get(id).keys_pressed = keys_down();
   }
+}
+
+template <> void ECS::run_system<System::AI>() {
+  Component_Registry<Input> &input_registry = component_registry<Input>();
+  Component_Registry<AI> &ai_registry = component_registry<AI>();
 
   for (const auto &id : ai_registry.all_ids()) {
     input_registry.get(id).keys_pressed = NPC::keys_down(ai_registry.get(id));
   }
+}
+
+
+template <> void ECS::run_system<System::InGameMenu>()
+{ 
+    Component_Registry<Input> &input_registry = component_registry<Input>();
+    Component_Registry<Player> &player_registry = component_registry<Player>();
+    ECS subsystem;
+    for (const auto &id : player_registry.all_ids()) {
+        auto &keys_pressed = input_registry.get(id).keys_pressed;
+        if (std::find(keys_pressed.begin(), keys_pressed.end(), KEY_ENTER) == keys_pressed.end()) {
+            continue;
+        }
+        unsigned long long menu_id = subsystem.spawn_entity(Input(true));
+        Component_Registry<Input> &menu_input_registry = subsystem.component_registry<Input>();
+        // it's flickering
+        while (!WindowShouldClose()) {
+            cap_framerate();
+            BeginDrawing();
+            auto &menu_keys_pressed = menu_input_registry.get(menu_id).keys_pressed;
+            if (std::find(menu_keys_pressed.begin(), menu_keys_pressed.end(), KEY_ENTER) != menu_keys_pressed.end()) {
+                break;
+            }
+            EndDrawing();
+            // it needs to be called after drawing, else it will return the same value every time
+            // you can improve it after adding an image for the menu
+            subsystem.run_system<System::Input>();
+        }
+    }
 }

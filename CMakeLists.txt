@@ -24,6 +24,8 @@ set(SOURCE_FILES
 	code/npc.hpp
 	code/serialization.cpp
 	code/serialization.hpp
+	code/time.hpp
+	code/time.cpp
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
