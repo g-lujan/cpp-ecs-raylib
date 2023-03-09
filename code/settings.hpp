@@ -1,9 +1,6 @@
 #ifndef _SETTINGS_H__
 #define _SETTINGS_H__
 
-#include "raylib.h"
-#include <functional>
-
 namespace Settings {
   inline constexpr float STEP = 1.0f;
   inline constexpr int SCREEN_WIDTH = 800;

@@ -6,6 +6,8 @@
 #include "settings.hpp"
 #include "npc.hpp"
 #include "time.hpp"
+#include "serialization.hpp"
+#include "../external/json.hpp"
 #include <algorithm>
 
 template <> void ECS::run_system<System::Tile>()
@@ -230,4 +232,21 @@ template <> void ECS::run_system<System::InGameMenu>()
             subsystem.run_system<System::Input>();
         }
     }
+}
+
+void ECS::serialize()
+{
+    auto component_registries_values = std::views::values(_component_registries);
+    std::vector<Component_Registry_Types> registries = {component_registries_values.begin(), component_registries_values.end()};
+    nlohmann::json output;
+
+    for (auto &&[id, to_purge] : _entities) {
+        if (to_purge) {
+            continue;
+        }
+        for (auto &registry : registries) {
+            do_serialize(id, output, registry);
+        }
+    }
+    save(output);
 }

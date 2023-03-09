@@ -1,4 +1,5 @@
 #include "movement.hpp"
+#include "components.hpp"
 
 void step_kinematics(Kinematics &kinematics)
 {

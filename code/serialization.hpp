@@ -2,7 +2,6 @@
 #define _SERIALIZATION_H_
 
 #include "../external/json.hpp"
-#include "components.hpp"
 #include "component_registry_types.hpp"
 
 template <typename T> void serialize_component(nlohmann::json &output, T &component);

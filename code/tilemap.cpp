@@ -1,4 +1,6 @@
 #include "tilemap.hpp"
+#include "ecs.hpp"
+#include "settings.hpp"
 #include "../external/json.hpp"
 #include "resources.hpp"
 #include <fstream>

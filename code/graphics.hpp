@@ -2,8 +2,6 @@
 #define _GRAPHICS_H__
 
 #include "raylib.h"
-#include "settings.hpp"
-#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -30,20 +28,13 @@ namespace Graphics {
 
   struct Frame {
     Frame() {}
-    Frame(std::string name, Vector2 start_frame_pos, int fps)
-        : 
-        action {name},
-        start_frame_pos{start_frame_pos},
-        curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
-        fps{fps}
-    {
-    }
+    Frame(std::string name, Vector2 start_frame_pos, int fps);
 
     std::string action;
     Rectangle curr_frame;
     Vector2 start_frame_pos;
     /* the x step of the animation on the texture */
-    int step{Settings::TILE_SIZE};
+    int step;
     int fps;
     int frames{4};
     /*

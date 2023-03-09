@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#include "settings.hpp"
 #include "../external/json.hpp"
 #include "raylib.h"
 #include "settings.hpp"
@@ -26,6 +27,15 @@ namespace Graphics {
                      rotation,
                      tint);
     }
+  }
+
+  Frame::Frame(std::string name, Vector2 start_frame_pos, int fps)
+      : action{name},
+        start_frame_pos{start_frame_pos},
+        curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
+        fps{fps},
+        step{Settings::TILE_SIZE}
+  {
   }
 
   void step(Frame &settings)

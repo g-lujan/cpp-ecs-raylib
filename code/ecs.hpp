@@ -7,8 +7,6 @@
 #include <ranges>
 
 #include "component_registry_types.hpp"
-#include "serialization.hpp"
-#include "../external/json.hpp"
 
 namespace System {
   struct Physics {};
@@ -69,22 +67,8 @@ public:
 
   template <typename T> void run_system();
 
-  void serialize()
-  {
-    auto component_registries_values = std::views::values(_component_registries);
-    std::vector<Component_Registry_Types> registries = {component_registries_values.begin(), component_registries_values.end()};
-    nlohmann::json output;
-    
-    for (auto &&[id, to_purge] : _entities) {
-      if (to_purge) {
-        continue;
-      }
-      for (auto &registry : registries) {
-        do_serialize(id, output, registry);
-      }
-    }
-    save(output);
-  }
+  void serialize();
+
 
 private:
   std::unordered_map<unsigned long long, bool> _entities;

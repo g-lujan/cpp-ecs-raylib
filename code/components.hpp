@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "resources.hpp"
+#include "side.hpp"
 
 #include <algorithm>
 #include <cfloat>
@@ -79,8 +80,6 @@ struct Kinematics : public Component {
     return "Kinematics";
   }
 };
-
-enum Side { RIGHT, LEFT, TOP, BOTTON, NONE };
 
 // TODO: rect x and y should be relative to position
 struct Collider : public Component {

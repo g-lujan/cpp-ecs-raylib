@@ -1,4 +1,5 @@
 #include "npc.hpp"
+#include "components.hpp"
 
 std::vector<KeyboardKey> NPC::keys_down(AI &ai)
 {

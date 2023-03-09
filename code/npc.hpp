@@ -3,9 +3,9 @@
 #include <random>
 #include <vector>
 
-#include<raylib.h>
+#include <raylib.h>
 
-#include "ecs.hpp"
+class AI;
 
 namespace NPC {
   std::vector<KeyboardKey> keys_down(AI &ai);
