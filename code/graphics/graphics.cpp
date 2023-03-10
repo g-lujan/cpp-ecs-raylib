@@ -1,11 +1,12 @@
 #include "graphics.hpp"
-#include "settings.hpp"
-#include "../external/json.hpp"
 #include "raylib.h"
-#include "settings.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "../management/settings.hpp"
+#include "../../external/json.hpp"
+#include "../management/settings.hpp"
 
 namespace Graphics {
 

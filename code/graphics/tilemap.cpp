@@ -1,8 +1,10 @@
 #include "tilemap.hpp"
-#include "ecs.hpp"
-#include "settings.hpp"
-#include "../external/json.hpp"
-#include "resources.hpp"
+#include "../ecs_core/ecs.hpp"
+#include "../management/settings.hpp"
+#include "../../external/json.hpp"
+#include "../management/resources.hpp"
+#include "../components/all_components.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <optional>

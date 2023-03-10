@@ -4,9 +4,9 @@
 #include <raylib.h>
 #include <unordered_map>
 #include <unordered_set>
-#include "side.hpp"
+#include "utils/side.hpp"
 
-class Kinematics;
+struct Kinematics;
 
 void step_kinematics(Kinematics &kinematics);
 Side get_collision_side(const Rectangle &rect, const Rectangle &other);

@@ -1,11 +1,9 @@
 #ifndef AI_H_
 
-#include <random>
 #include <vector>
-
 #include <raylib.h>
 
-class AI;
+struct AI;
 
 namespace NPC {
   std::vector<KeyboardKey> keys_down(AI &ai);

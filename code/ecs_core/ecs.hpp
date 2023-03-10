@@ -5,8 +5,7 @@
 #include <unordered_map>
 #include <variant>
 #include <ranges>
-
-#include "component_registry_types.hpp"
+#include "components.hpp"
 
 namespace System {
   struct Physics {};
@@ -50,20 +49,25 @@ public:
           components.entity_id = entity_id;
           std::type_index component_type = typeid(components);
           if (_component_registries.find(component_type) == _component_registries.end()) {
-            _component_registries[component_type] = Component_Registry<decltype(components)>();
+              // TODO: smart pointers instead of new
+            _component_registries.emplace(std::make_pair(component_type, new Component_Registry<decltype(components)>()));
           }
-          std::get<Component_Registry<decltype(components)>>(_component_registries[component_type]).record(entity_id, components);
+          static_cast<Component_Registry<decltype(components)>*>(_component_registries[component_type])->record(entity_id, components);
         }(),
         ...);
     return entity_id;
   }
 
-  template <typename T> T &component(const unsigned long long entity_id)
+  template <typename T> 
+  T &component(const unsigned long long entity_id)
   {
-    return std::get<Component_Registry<T>>(_component_registries[typeid(T)]).get(entity_id);
+    return static_cast<Component_Registry<T>&>(*_component_registries[typeid(T)]).get(entity_id);
   }
 
-  template <typename T> Component_Registry<T> &component_registry() { return std::get<Component_Registry<T>>(_component_registries[typeid(T)]); }
+  template <typename T> 
+  Component_Registry<T> &component_registry() { 
+      return static_cast<Component_Registry<T>&>(*_component_registries[typeid(T)]); 
+  }
 
   template <typename T> void run_system();
 
@@ -72,7 +76,7 @@ public:
 
 private:
   std::unordered_map<unsigned long long, bool> _entities;
-  std::unordered_map<std::type_index, Component_Registry_Types> _component_registries;
+  std::unordered_map<std::type_index, Component_Registry_Base *> _component_registries;
   unsigned long long _latest{0};
 };
 

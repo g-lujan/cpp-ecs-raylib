@@ -1,9 +1,9 @@
-#include "ecs.hpp"
 #include "raylib.h"
-#include "resources.hpp"
-#include "settings.hpp"
-#include "tilemap.hpp"
-#include "time.hpp"
+#include "ecs_core/ecs.hpp"
+#include "management/resources.hpp"
+#include "management/settings.hpp"
+#include "graphics/tilemap.hpp"
+#include "utils/time.hpp"
 
 int main(void)
 {

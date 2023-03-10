@@ -7,26 +7,36 @@ find_package(raylib CONFIG REQUIRED)
 
 set(SOURCE_FILES 
 	code/main.cpp 
-	code/components.hpp
-	code/ecs.cpp 
-	code/ecs.hpp 
-	code/resources.cpp 
-	code/resources.hpp
-	code/settings.hpp
-    code/graphics.cpp
-	code/graphics.hpp
-	code/tilemap.cpp
-	code/tilemap.hpp
+	code/ecs_core/ecs.cpp 
+	code/ecs_core/ecs.hpp 
+	code/ecs_core/components.hpp
+	code/management/resources.cpp 
+	code/management/resources.hpp
+	code/management/settings.hpp
+      code/graphics/graphics.cpp
+	code/graphics/graphics.hpp
+	code/graphics/tilemap.cpp
+	code/graphics/tilemap.hpp
 	code/movement.cpp
 	code/movement.hpp
-    external/json.hpp
-	code/npc.cpp
-	code/npc.hpp
-	code/serialization.cpp
-	code/serialization.hpp
-	code/time.hpp
-	code/time.cpp
-	code/side.hpp
+      external/json.hpp
+	code/AI/npc.cpp
+	code/AI/npc.hpp
+	code/management/serialization.cpp
+	code/management/serialization.hpp
+	code/utils/time.hpp
+	code/utils/time.cpp
+	code/utils/side.hpp
+
+	code/components/collider.hpp
+	code/components/tile.hpp
+	code/components/kinematics.hpp
+	code/components/player.hpp
+	code/components/ai.hpp
+	code/components/animation.hpp
+	code/components/health.hpp
+	code/components/input.hpp
+	code/components/view.hpp
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")

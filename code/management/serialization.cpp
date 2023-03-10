@@ -1,24 +1,12 @@
 #include "serialization.hpp"
 #include <fstream>
 #include <iomanip>
+#include <raylib.h>
+
+#include "../components/all_components.hpp"
 
 using json = nlohmann::json;
 
-template <typename T> void serialize_component(unsigned long long id, nlohmann::json &output, Component_Registry<T> &registry)
-{
-  if (registry.has(id)) {
-    T component = registry.get(id);
-    if (component.serializable) {
-        nlohmann::json j = component;
-        output[std::to_string(id)][component.type_name()] = j;
-    }
-  }
-}
-
-void do_serialize(unsigned long long id, nlohmann::json &output, Component_Registry_Types &registry)
-{
-  std::visit([&id, &output](auto registry) { serialize_component(id, output, registry); }, registry);
-}
 
 void save(nlohmann::json &output)
 {

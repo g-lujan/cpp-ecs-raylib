@@ -1,7 +1,7 @@
 #ifndef _RESOURCES_H__
 #define _RESOURCES_H__
 
-#include "graphics.hpp"
+#include "../graphics/graphics.hpp"
 #include "raylib.h"
 #include <string>
 #include <unordered_map>

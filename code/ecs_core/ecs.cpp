@@ -1,14 +1,16 @@
 #include "ecs.hpp"
-#include "movement.hpp"
 #include "raylib.h"
 #include "raymath.h"
-#include "resources.hpp"
-#include "settings.hpp"
-#include "npc.hpp"
-#include "time.hpp"
-#include "serialization.hpp"
-#include "../external/json.hpp"
 #include <algorithm>
+
+#include "../movement.hpp"
+#include "../AI/npc.hpp"
+#include "../utils/time.hpp"
+#include "../management/settings.hpp"
+#include "../management/resources.hpp"
+#include "../components/all_components.hpp"
+#include "../management/serialization.hpp"
+#include "../../external/json.hpp"
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -237,7 +239,7 @@ template <> void ECS::run_system<System::InGameMenu>()
 void ECS::serialize()
 {
     auto component_registries_values = std::views::values(_component_registries);
-    std::vector<Component_Registry_Types> registries = {component_registries_values.begin(), component_registries_values.end()};
+    std::vector<Component_Registry_Base *> registries = {component_registries_values.begin(), component_registries_values.end()};
     nlohmann::json output;
 
     for (auto &&[id, to_purge] : _entities) {
@@ -245,7 +247,7 @@ void ECS::serialize()
             continue;
         }
         for (auto &registry : registries) {
-            do_serialize(id, output, registry);
+            serialize_component(id, output, registry);
         }
     }
     save(output);
