@@ -4,6 +4,7 @@
 #include "management/settings.hpp"
 #include "graphics/tilemap.hpp"
 #include "utils/time.hpp"
+#include "systems/available_systems.hpp"
 
 int main(void)
 {

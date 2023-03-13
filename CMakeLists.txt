@@ -37,6 +37,8 @@ set(SOURCE_FILES
 	code/components/health.hpp
 	code/components/input.hpp
 	code/components/view.hpp
+
+	code/systems/available_systems.hpp
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")

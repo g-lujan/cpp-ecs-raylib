@@ -7,18 +7,6 @@
 #include <ranges>
 #include "components.hpp"
 
-namespace System {
-  struct Physics {};
-  struct Input {};
-  struct Draw {};
-  struct Animation {};
-  struct Tile {};
-  struct Player_Animation{};
-  struct Player_Movement {};
-  struct InGameMenu {};
-  struct AI {};
-} // namespace System
-
 class ECS {
 public:
   ECS() {}
@@ -49,7 +37,6 @@ public:
           components.entity_id = entity_id;
           std::type_index component_type = typeid(components);
           if (_component_registries.find(component_type) == _component_registries.end()) {
-              // TODO: smart pointers instead of new
             _component_registries.emplace(std::make_pair(
                 component_type, std::make_unique<Component_Registry<decltype(components)>>()));
           }

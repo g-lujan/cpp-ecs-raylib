@@ -11,6 +11,7 @@
 #include "../components/all_components.hpp"
 #include "../management/serialization.hpp"
 #include "../../external/json.hpp"
+#include "../systems/available_systems.hpp"
 
 template <> void ECS::run_system<System::Tile>()
 {
