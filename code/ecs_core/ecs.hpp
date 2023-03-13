@@ -50,23 +50,23 @@ public:
           std::type_index component_type = typeid(components);
           if (_component_registries.find(component_type) == _component_registries.end()) {
               // TODO: smart pointers instead of new
-            _component_registries.emplace(std::make_pair(component_type, new Component_Registry<decltype(components)>()));
+            _component_registries.emplace(std::make_pair(
+                component_type, std::make_unique<Component_Registry<decltype(components)>>()));
           }
-          static_cast<Component_Registry<decltype(components)>*>(_component_registries[component_type])->record(entity_id, components);
+          static_cast<Component_Registry<decltype(components)>*>(_component_registries[component_type].get())->record(entity_id, components);
         }(),
         ...);
     return entity_id;
   }
 
-  template <typename T> 
-  T &component(const unsigned long long entity_id)
-  {
-    return static_cast<Component_Registry<T>&>(*_component_registries[typeid(T)]).get(entity_id);
-  }
 
   template <typename T> 
-  Component_Registry<T> &component_registry() { 
-      return static_cast<Component_Registry<T>&>(*_component_registries[typeid(T)]); 
+  Component_Registry<T> *component_registry() { 
+      return static_cast<Component_Registry<T>*>(_component_registries[typeid(T)].get()); 
+  }
+
+  template <typename T> T &component(const unsigned long long entity_id) { 
+      return component_registry<T>()->get(entity_id);
   }
 
   template <typename T> void run_system();
@@ -76,7 +76,7 @@ public:
 
 private:
   std::unordered_map<unsigned long long, bool> _entities;
-  std::unordered_map<std::type_index, Component_Registry_Base *> _component_registries;
+  std::unordered_map<std::type_index, std::unique_ptr<Component_Registry_Base>> _component_registries;
   unsigned long long _latest{0};
 };
 
