@@ -10,9 +10,9 @@ struct Kinematics : public Component {
   Vector2 acceleration = {0.f, 0.f}; // useful for jumping, for ex
   virtual std::string type_name() const { return "Kinematics"; }
 
-  virtual nlohmann::json serialize()
+  virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;
-    return j;
+    return std::make_unique<Serializable>(j);
   }
 };

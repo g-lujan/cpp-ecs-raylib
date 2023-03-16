@@ -8,9 +8,9 @@ struct Input : public Component {
   std::vector<KeyboardKey> keys_pressed;
   bool changed{true};
   virtual std::string type_name() const { return "Input"; }
-  virtual nlohmann::json serialize()
+  virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;
-    return j;
+    return std::make_unique<Serializable>(j);
   }
 };

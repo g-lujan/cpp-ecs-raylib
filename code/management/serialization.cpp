@@ -4,8 +4,16 @@
 #include <raylib.h>
 
 #include "../components/all_components.hpp"
+#include "../ecs_core/components.hpp"
 
 using json = nlohmann::json;
+
+void serialize_component(const unsigned long long id, nlohmann::json &output, Component_Registry_Base *registry)
+{
+  if (registry->has(id) && registry->serializable(id)) {
+    output[std::to_string(id)][registry->type_name()] = registry->serialize(id)->data;
+  }
+}
 
 
 void save(nlohmann::json &output)

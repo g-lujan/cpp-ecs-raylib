@@ -211,6 +211,7 @@ template <> void ECS::run_system<System::AI>() {
 
 template <> void ECS::run_system<System::InGameMenu>()
 { 
+    serialize();
     Component_Registry<Input> *input_registry = component_registry<Input>();
     Component_Registry<Player> *player_registry = component_registry<Player>();
     ECS subsystem;

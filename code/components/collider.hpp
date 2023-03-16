@@ -25,9 +25,9 @@ struct Collider : public Component {
 
   virtual std::string type_name() const { return "Collider"; }
 
-  virtual nlohmann::json serialize()
+  virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;
-    return j;
+    return std::make_unique<Serializable>(j);
   }
 };

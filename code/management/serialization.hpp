@@ -3,13 +3,15 @@
 
 #include "../../external/json.hpp"
 
-template <typename T> void serialize_component(unsigned long long id, nlohmann::json &output, T *registry)
-{
-  if (registry->has(id) && registry->serializable(id)) {
-    output[std::to_string(id)][registry->type_name()] = registry->serialize(id);
-  }
-}
 
+struct Serializable {
+  nlohmann::json data;
+  Serializable(nlohmann::json &data) : data(data) {}
+};
+
+struct Component_Registry_Base;
+
+void serialize_component(const unsigned long long id, nlohmann::json &output, Component_Registry_Base *registry);
 void save(nlohmann::json &output);
 
 struct Vector2;

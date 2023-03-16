@@ -14,9 +14,9 @@ struct Tile : public Component {
   float rotation;
   Graphics::Flip flip;
   virtual std::string type_name() const { return "Tile"; }
-  virtual nlohmann::json serialize()
+  virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;
-    return j;
+    return std::make_unique<Serializable>(j);
   }
 };

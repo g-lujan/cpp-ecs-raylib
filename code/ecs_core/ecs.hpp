@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <variant>
 #include <ranges>
+#include <memory>
 #include "components.hpp"
 
 class ECS {
