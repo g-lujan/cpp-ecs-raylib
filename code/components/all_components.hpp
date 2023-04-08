@@ -9,3 +9,4 @@
 #include "health.hpp"
 #include "input.hpp"
 #include "view.hpp"
+#include "controls.hpp"

@@ -58,4 +58,8 @@ struct AI;
 void to_json(nlohmann::json &j, const AI &ai);
 void from_json(const nlohmann::json &j, AI &ai);
 
+struct Controls;
+void to_json(nlohmann::json &j, const Controls &ai);
+void from_json(const nlohmann::json &j, Controls &ai);
+
 #endif

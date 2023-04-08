@@ -13,13 +13,13 @@ set(SOURCE_FILES
 	code/management/resources.cpp 
 	code/management/resources.hpp
 	code/management/settings.hpp
-      code/graphics/graphics.cpp
+    code/graphics/graphics.cpp
 	code/graphics/graphics.hpp
 	code/graphics/tilemap.cpp
 	code/graphics/tilemap.hpp
-	code/movement.cpp
-	code/movement.hpp
-      external/json.hpp
+	code/utils/movement.cpp
+	code/utils/movement.hpp
+    external/json.hpp
 	code/AI/npc.cpp
 	code/AI/npc.hpp
 	code/management/serialization.cpp
@@ -37,6 +37,8 @@ set(SOURCE_FILES
 	code/components/health.hpp
 	code/components/input.hpp
 	code/components/view.hpp
+	code/components/controls.hpp
+	code/components/controls.cpp
 
 	code/systems/available_systems.hpp
 )

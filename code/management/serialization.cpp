@@ -102,3 +102,6 @@ void from_json(const nlohmann::json &j, Tile &tile) { return; }
 
 void to_json(nlohmann::json &j, const AI &ai) { return; }
 void from_json(const nlohmann::json &j, AI &ai) { return; }
+
+void to_json(nlohmann::json &j, const Controls &ai) { return; }
+void from_json(const nlohmann::json &j, Controls &ai) { return; }

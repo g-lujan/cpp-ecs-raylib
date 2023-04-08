@@ -106,6 +106,7 @@ namespace Tilemap {
                                   true,
                                   "hometown"),
                              Input(true),
+                             Controls(),
                              Player());
           }
           if (object["name"].get<std::string>() == "Enemy1") {
@@ -115,6 +116,7 @@ namespace Tilemap {
                              Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
                              Input(true),
                              AI(true),
+                             Controls(),
                              Player());
           }
         }

@@ -3,7 +3,7 @@
 #include "raymath.h"
 #include <algorithm>
 
-#include "../movement.hpp"
+#include "../utils/movement.hpp"
 #include "../AI/npc.hpp"
 #include "../utils/time.hpp"
 #include "../management/settings.hpp"
@@ -114,26 +114,39 @@ template <> void ECS::run_system<System::Draw>()
   EndDrawing();
 }
 
+static void step_kinematics(Kinematics &kinematics);
+
 template <> void ECS::run_system<System::Player_Movement>()
 {
   Component_Registry<Player> *player_registry = component_registry<Player>();
   Component_Registry<Kinematics> *kinematics_registry = component_registry<Kinematics>();
   Component_Registry<Collider> *body_registry = component_registry<Collider>();
   Component_Registry<Input> *input_registry = component_registry<Input>();
+  Component_Registry<Controls> *controls_registry = component_registry<Controls>();
 
   for (const auto &id : player_registry->all_ids()) {
     auto &player_body = body_registry->get(id);
     auto &keys_pressed = input_registry->get(id).keys_pressed;
     auto &kinematics = kinematics_registry->get(id);
+    auto &controls = controls_registry->get(id);
     kinematics.velocity.x = 0;
     for (const KeyboardKey &key : keys_pressed) {
-      key_to_movement.at(key)(kinematics, player_body.collision_sides);
+      controls.key_to_movement.at(key)(kinematics, player_body.collision_sides);
     }
     step_kinematics(kinematics);
     player_body.bound.x = kinematics.position.x;
     player_body.bound.y = kinematics.position.y;
   }
 }
+
+static void step_kinematics(Kinematics &kinematics)
+{
+  const float dt = GetFrameTime();
+  kinematics.position.x += kinematics.velocity.x * dt + (kinematics.acceleration.x * dt * dt) / 2;
+  kinematics.velocity.x += kinematics.acceleration.x * dt;
+  kinematics.position.y += kinematics.velocity.y * dt + (kinematics.acceleration.y * dt * dt) / 2;
+  kinematics.velocity.y += kinematics.acceleration.y * dt;
+};
 
 template <> void ECS::run_system<System::Physics>()
 {
