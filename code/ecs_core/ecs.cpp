@@ -145,7 +145,8 @@ static void step_kinematics(Kinematics &kinematics)
   kinematics.position.x += kinematics.velocity.x * dt + (kinematics.acceleration.x * dt * dt) / 2;
   kinematics.velocity.x += kinematics.acceleration.x * dt;
   kinematics.position.y += kinematics.velocity.y * dt + (kinematics.acceleration.y * dt * dt) / 2;
-  kinematics.velocity.y += kinematics.acceleration.y * dt;
+  const float TERMINAL_VELOCITY = 100.f;
+  kinematics.velocity.y += kinematics.velocity.y < TERMINAL_VELOCITY? 3 * kinematics.acceleration.y * dt : 0.f;
 };
 
 template <> void ECS::run_system<System::Physics>()
@@ -173,7 +174,7 @@ template <> void ECS::run_system<System::Physics>()
     // gravity
     auto &kinematics = kinematics_registry->get(id);
     if (!body.collision_sides.contains(Side::BOTTON)) {
-      kinematics.acceleration.y = 40;
+      kinematics.acceleration.y = 70;
     }
     else {
       kinematics.acceleration.y = 0;

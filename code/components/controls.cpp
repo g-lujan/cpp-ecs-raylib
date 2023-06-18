@@ -19,7 +19,7 @@ void move_left(Kinematics &kinematics, std::unordered_set<Side> &collision_sides
 void jump(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)
 {
   if (collision_sides.contains(Side::BOTTON)) {
-    kinematics.acceleration.y = -4000;
+    kinematics.acceleration.y = -3500;
   }
 }
 
