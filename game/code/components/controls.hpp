@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <unordered_map>
 #include <unordered_set>
+#include "components.hpp"
 #include "../utils/side.hpp"
 #include "../components/kinematics.hpp"
 

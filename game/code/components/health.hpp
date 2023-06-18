@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs_core/components.hpp"
+#include "components.hpp"
 
 struct Health : public Component {
   Health(int curr, int max) : curr{curr}, max{max} { serializable = true; }

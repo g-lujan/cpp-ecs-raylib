@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_set>
-#include "../ecs_core/components.hpp"
+#include "components.hpp"
 #include "../utils/side.hpp"
 #include "../management/serialization.hpp"
 

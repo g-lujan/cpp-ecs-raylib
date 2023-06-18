@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs_core/components.hpp"
+#include "components.hpp"
 #include "../management/serialization.hpp"
 
 struct Kinematics : public Component {

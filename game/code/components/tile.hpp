@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs_core/components.hpp"
+#include "components.hpp"
 #include "../graphics/graphics.hpp"
 
 struct Tile : public Component {

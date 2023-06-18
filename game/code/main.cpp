@@ -1,5 +1,5 @@
+#include "ecs.hpp"
 #include "raylib.h"
-#include "ecs_core/ecs.hpp"
 #include "management/resources.hpp"
 #include "management/settings.hpp"
 #include "graphics/tilemap.hpp"

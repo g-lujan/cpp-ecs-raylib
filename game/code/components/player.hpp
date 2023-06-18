@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs_core/components.hpp"
+#include "components.hpp"
 
 struct Player : public Component {
   Player() { serializable = true; }
