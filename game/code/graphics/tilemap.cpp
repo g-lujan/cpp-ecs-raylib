@@ -21,26 +21,12 @@ namespace Tilemap {
   constexpr unsigned ROTATED_HEXAGONAL_120_FLAG = 0x10000000; // bit 29, unused in our case
 
   // Forward declaration of utilitary functions
+  static std::optional<json> load_and_parse_json(const std::string &path);
   static bool is_tilemap_valid(std::optional<json> &tilemap_json);
   static bool is_tileset_valid(std::optional<json> &tileset_json);
   static float tile_rotation(const int raw_tile_id);
   static Graphics::Flip tile_flip(const int raw_tile_id);
 
-  static std::optional<json> load_and_parse_json(const std::string &path)
-  {
-    std::ifstream loaded_json_stream(path);
-    if (!loaded_json_stream.is_open()) {
-      std::cerr << "Failed to open file: " << path << ". Error: " << strerror(errno) << std::endl;
-      return {};
-    }
-    try {
-      return json::parse(loaded_json_stream);
-    }
-    catch (const std::exception &e) {
-      std::cerr << "Failed to parse json: " << loaded_json_stream.rdbuf() << ". Exception: " << e.what() << std::endl;
-      return {};
-    }
-  }
 
   bool load(ECS &ecs, const std::string &map_name)
   {
@@ -121,6 +107,22 @@ namespace Tilemap {
           }
         }
       }
+    }
+  }
+
+  static std::optional<json> load_and_parse_json(const std::string &path)
+  {
+    std::ifstream loaded_json_stream(path);
+    if (!loaded_json_stream.is_open()) {
+      std::cerr << "Failed to open file: " << path << ". Error: " << strerror(errno) << std::endl;
+      return {};
+    }
+    try {
+      return json::parse(loaded_json_stream);
+    }
+    catch (const std::exception &e) {
+      std::cerr << "Failed to parse json: " << loaded_json_stream.rdbuf() << ". Exception: " << e.what() << std::endl;
+      return {};
     }
   }
 

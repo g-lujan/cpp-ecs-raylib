@@ -6,10 +6,6 @@
 
 struct Anim : public Component {
   Anim(const std::string name, Graphics::Texture *tex, Graphics::Frame &settings) : name{name}, tex{tex}, settings{settings} {}
-  Graphics::Texture *tex{nullptr};
-  Graphics::Frame settings;
-  Graphics::Flip flip;
-  std::string name;
 
   virtual std::string type_name() const { return "Anim"; }
 
@@ -18,4 +14,9 @@ struct Anim : public Component {
     nlohmann::json j = *this;
     return std::make_unique<Serializable>(j);
   }
+
+  Graphics::Texture *tex{nullptr};
+  Graphics::Frame settings;
+  Graphics::Flip flip;
+  std::string name;
 };

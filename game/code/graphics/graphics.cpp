@@ -10,6 +10,8 @@
 
 namespace Graphics {
 
+  Texture::Texture(const std::string path_to_tex) { _tex = LoadTexture(path_to_tex.c_str()); }
+
   void Texture::draw(Rectangle src_rect, Vector2 dest, Color tint, float rotation, Flip flip)
   {
     if (flip.horizontally || flip.vertically) {
@@ -35,23 +37,23 @@ namespace Graphics {
         start_frame_pos{start_frame_pos},
         curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
         fps{fps},
-        step{Settings::TILE_SIZE}
+        step_size{Settings::TILE_SIZE}
   {
   }
 
-  void step(Frame &settings)
+  void Frame::step()
   {
-    if (settings.fps == 0) {
+    if (fps == 0) {
       return;
     }
-    settings.frames_counter++;
-    if (settings.frames_counter >= (60 / settings.fps)) {
-      settings.frames_counter = 0;
-      if (settings.curr_frame.x > settings.frames * settings.step) {
+    frames_counter++;
+    if (frames_counter >= (60 / fps)) {
+      frames_counter = 0;
+      if (curr_frame.x > frames * step_size) {
         // rewind
-        settings.curr_frame.x = settings.start_frame_pos.x;
+        curr_frame.x = start_frame_pos.x;
       }
-      settings.curr_frame.x += settings.step;
+      curr_frame.x += step_size;
     }
   }
 } // namespace Graphics

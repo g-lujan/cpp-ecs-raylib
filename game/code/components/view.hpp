@@ -5,10 +5,6 @@
 
 struct View : public Component {
   View(Camera2D cam, Color tint, bool active, std::string map) : camera{cam}, tint{tint}, active{active}, map{map} {}
-  Camera2D camera{0};
-  Color tint;
-  std::string map;
-  bool active{false};
 
   virtual std::string type_name() const { return "View"; }
 
@@ -17,4 +13,9 @@ struct View : public Component {
     nlohmann::json j = *this;
     return std::make_unique<Serializable>(j);
   }
+
+  Camera2D camera{0};
+  Color tint;
+  std::string map;
+  bool active{false};
 };

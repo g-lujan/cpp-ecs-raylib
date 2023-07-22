@@ -23,6 +23,18 @@ namespace Resources {
     _tilemaps_paths.emplace("hometown", Paths::HOMETOWN_JSON);
   }
 
+  Graphics::Texture &Manager::texture(const std::string tex_name) { 
+      return _textures[tex_name];
+  }
+  
+  Graphics::Frame &Manager::animation(const std::string anim_name, const KeyboardKey key) { 
+      return _animations[anim_name][key];
+  }
+
+  std::string Manager::tilemap_path(const std::string map_name) { 
+      return _tilemaps_paths[map_name]; 
+  }
+
   Manager &get_resource_manager()
   {
     static Manager manager;

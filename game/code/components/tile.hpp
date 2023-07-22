@@ -9,14 +9,16 @@ struct Tile : public Component {
   {
   }
 
-  Graphics::Texture *tex{nullptr};
-  Rectangle src_rect;
-  float rotation;
-  Graphics::Flip flip;
   virtual std::string type_name() const { return "Tile"; }
+
   virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;
     return std::make_unique<Serializable>(j);
   }
+
+  Graphics::Texture *tex{nullptr};
+  Rectangle src_rect;
+  float rotation;
+  Graphics::Flip flip;
 };

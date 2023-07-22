@@ -17,11 +17,6 @@ enum class Body_Type {
 
 struct Collider : public Component {
   Collider(const Rectangle rect, const Body_Type type, bool kinematic) : bound{rect}, type{type}, rot{0.f}, kinematic{kinematic} {}
-  Rectangle bound;
-  Body_Type type;
-  float rot;
-  bool kinematic;
-  std::unordered_set<Side> collision_sides;
 
   virtual std::string type_name() const { return "Collider"; }
 
@@ -30,4 +25,10 @@ struct Collider : public Component {
     nlohmann::json j = *this;
     return std::make_unique<Serializable>(j);
   }
+
+  Rectangle bound;
+  Body_Type type;
+  float rot;
+  bool kinematic;
+  std::unordered_set<Side> collision_sides;
 };

@@ -57,7 +57,7 @@ template <> void ECS::run_system<System::Animation>()
       Vector2 position = {body_registry->get(anim_id).bound.x, body_registry->get(anim_id).bound.y};
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 4) {
-        Graphics::step(curr_anim.settings);
+        curr_anim.settings.step();
         curr_anim.tex->draw(curr_anim.settings.curr_frame, position, curr_view.tint, 0.f, curr_anim.flip);
       }
     }

@@ -10,8 +10,7 @@
 
 struct Controls : public Component {
   using MOVE_ACTION = std::function<void(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)>;
-  std::unordered_map<KeyboardKey, MOVE_ACTION> key_to_movement;
-  
+
   Controls();
   
   virtual std::string type_name() const { return "Controls"; }
@@ -21,4 +20,6 @@ struct Controls : public Component {
     nlohmann::json j = *this;
     return std::make_unique<Serializable>(j);
   }
+
+  std::unordered_map<KeyboardKey, MOVE_ACTION> key_to_movement;
 };
