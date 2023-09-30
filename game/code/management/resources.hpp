@@ -18,7 +18,7 @@ namespace Resources {
   public:
     Manager();
     Graphics::Texture &texture(const std::string tex_name);
-    Graphics::Frame &animation(const std::string anim_name, const KeyboardKey key);
+    Graphics::Frame &animation(const std::string anim_name, const std::string action);
     std::string tilemap_path(const std::string map_name);
 
     // May implement ways to clear unused stuff from the Manager in the future
@@ -26,7 +26,7 @@ namespace Resources {
 
   private:
     std::unordered_map<std::string, Graphics::Texture> _textures;
-    std::unordered_map<std::string, std::unordered_map<KeyboardKey, Graphics::Frame>> _animations;
+    std::unordered_map<std::string, std::unordered_map<std::string, Graphics::Frame>> _animations;
     std::unordered_map<std::string, std::string> _tilemaps_paths;
   };
 

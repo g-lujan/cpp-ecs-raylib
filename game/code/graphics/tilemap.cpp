@@ -23,15 +23,21 @@ namespace Tilemap {
   /**********************************************
    * FORWARD DECLARATION OF UTILITARY FUNCTIONS *
    **********************************************/
+
   static std::optional<json> load_and_parse_json(const std::string &path);
   static bool is_tilemap_valid(std::optional<json> &tilemap_json);
   static bool is_tileset_valid(std::optional<json> &tileset_json);
   static float tile_rotation(const int raw_tile_id);
   static Graphics::Flip tile_flip(const int raw_tile_id);
+  
+  // Spawn functions
   static void spawn_actors(Tilemap::json &layer, ECS &ecs, Resources::Manager &resources_manager);
   static void spawn_collision_entities(json &layer, ECS &ecs);
   static void spawn_tiles(const int num_tileset_cols, const int map_width_in_tiles, Tilemap::json &layer, ECS &ecs, Graphics::Texture *texture);
 
+   /**********************************************
+   * IMPL OF PUBLIC FUNCTIONS                    *
+   ***********************************************/
 
   bool load(ECS &ecs, const std::string &map_name)
   {
@@ -68,9 +74,9 @@ namespace Tilemap {
     }
   }
 
-  /*******************
-   * SPAWN FUNCTIONS *
-   *******************/
+  /*******************************
+   * IMPL OF UTILITARY FUNCTIONS *
+   *******************************/
 
   static void spawn_actors(Tilemap::json &layer, ECS &ecs, Resources::Manager &resources_manager)
   {
@@ -80,7 +86,7 @@ namespace Tilemap {
         ecs.spawn_entity(Kinematics(spawn_point),
                          Collider({spawn_point.x, spawn_point.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, Body_Type::Player, true),
                          Health(100, 100),
-                         Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
+                         Anim("player", "player", resources_manager.animation("player", "idle")),
                          View({{Settings::SCREEN_WIDTH / 2, Settings::SCREEN_HEIGHT / 2}, spawn_point, 0.f, Settings::DEFAULT_ZOOM},
                               {255, 255, 255, 255},
                               true,
@@ -93,7 +99,7 @@ namespace Tilemap {
         ecs.spawn_entity(Kinematics(spawn_point),
                          Collider({spawn_point.x, spawn_point.y, Settings::TILE_SIZE, Settings::TILE_SIZE}, Body_Type::Player, true),
                          Health(100, 100),
-                         Anim("player", &resources_manager.texture("player"), resources_manager.animation("player", KEY_NULL)),
+                         Anim("player", "player", resources_manager.animation("player", "idle")),
                          Input(true),
                          AI(true),
                          Controls(),

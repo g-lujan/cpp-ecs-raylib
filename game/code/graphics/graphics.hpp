@@ -27,12 +27,12 @@ namespace Graphics {
 
   struct Frame {
     Frame() {}
-    Frame(std::string name, Vector2 start_frame_pos, int fps);
-    void step();
+    Frame(std::string name, Vector2 start_pos, int fps);
+    void step(float rewind_offset = 0.f);
 
     std::string action;
-    Rectangle curr_frame;
-    Vector2 start_frame_pos;
+    Rectangle src_rect;
+    Vector2 start_pos;
 
     int step_size; // the x step of the animation on the texture
     int fps;

@@ -26,9 +26,12 @@ void jump(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)
 Controls::Controls()
 {
   // defaults
-  key_to_movement[KEY_NULL] = idle;
-  key_to_movement[KEY_ENTER] = idle;
-  key_to_movement[KEY_RIGHT] = move_right;
-  key_to_movement[KEY_LEFT] = move_left;
-  key_to_movement[KEY_SPACE] = jump;
+  key_to_movement[KEY_NULL] = Move_Action("idle", idle);
+  key_to_movement[KEY_ENTER] = Move_Action("idle", idle);
+  key_to_movement[KEY_RIGHT] = Move_Action("move_right", move_right);
+  key_to_movement[KEY_D] = Move_Action("move_right", move_right);
+  key_to_movement[KEY_LEFT] = Move_Action("move_left", move_left);
+  key_to_movement[KEY_A] = Move_Action("move_left", move_left);
+  key_to_movement[KEY_SPACE] = Move_Action("jump", jump);
+  key_to_movement[KEY_W] = Move_Action("jump", jump);
 }

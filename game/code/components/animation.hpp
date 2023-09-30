@@ -5,7 +5,7 @@
 #include "../management/serialization.hpp"
 
 struct Anim : public Component {
-  Anim(const std::string name, Graphics::Texture *tex, Graphics::Frame &settings) : name{name}, tex{tex}, settings{settings} {}
+  Anim(const std::string name, std::string tex, Graphics::Frame &frame) : name{name}, texture_id{tex}, frame{frame} {}
 
   virtual std::string type_name() const { return "Anim"; }
 
@@ -15,8 +15,8 @@ struct Anim : public Component {
     return std::make_unique<Serializable>(j);
   }
 
-  Graphics::Texture *tex{nullptr};
-  Graphics::Frame settings;
+  std::string texture_id;
+  Graphics::Frame frame;
   Graphics::Flip flip;
   std::string name;
 };

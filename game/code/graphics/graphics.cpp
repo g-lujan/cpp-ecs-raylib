@@ -32,16 +32,16 @@ namespace Graphics {
     }
   }
 
-  Frame::Frame(std::string name, Vector2 start_frame_pos, int fps)
+  Frame::Frame(std::string name, Vector2 start_pos, int fps)
       : action{name},
-        start_frame_pos{start_frame_pos},
-        curr_frame{start_frame_pos.x, start_frame_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
+        start_pos{start_pos},
+        src_rect{start_pos.x, start_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},
         fps{fps},
         step_size{Settings::TILE_SIZE}
   {
   }
 
-  void Frame::step()
+  void Frame::step(float rewind_offset)
   {
     if (fps == 0) {
       return;
@@ -49,11 +49,11 @@ namespace Graphics {
     frames_counter++;
     if (frames_counter >= (60 / fps)) {
       frames_counter = 0;
-      if (curr_frame.x > frames * step_size) {
+      if (src_rect.x > frames * step_size) {
         // rewind
-        curr_frame.x = start_frame_pos.x;
+        src_rect.x = start_pos.x + rewind_offset;
       }
-      curr_frame.x += step_size;
+      src_rect.x += step_size;
     }
   }
 } // namespace Graphics

@@ -11,12 +11,11 @@ namespace Resources {
     _textures.emplace("hometown", Paths::HOMETOWN_IMAGE);
     _animations.emplace(std::make_pair(
         "player",
-        std::unordered_map<KeyboardKey, Graphics::Frame>(
-            {
-                std::make_pair(KEY_NULL, Graphics::Frame("idle", Vector2{0, 0}, 3)),
-                std::make_pair(KEY_RIGHT, Graphics::Frame("move_right", Vector2{0, 32}, 8)),
-                std::make_pair(KEY_LEFT, Graphics::Frame("move_left", Vector2{0, 32}, 8)),
-                std::make_pair(KEY_SPACE, Graphics::Frame("jump", Vector2{0, 64}, 4))
+        std::unordered_map<std::string, Graphics::Frame>(
+            {std::make_pair("idle", Graphics::Frame("idle", Vector2{0, 0}, 3)),
+                std::make_pair("move_right", Graphics::Frame("move_right", Vector2{0, 32}, 8)),
+                std::make_pair("move_left", Graphics::Frame("move_left", Vector2{0, 32}, 8)),
+                std::make_pair("jump", Graphics::Frame("jump", Vector2{0, 64}, 4))
             }
         )
     ));
@@ -27,8 +26,8 @@ namespace Resources {
       return _textures[tex_name];
   }
   
-  Graphics::Frame &Manager::animation(const std::string anim_name, const KeyboardKey key) { 
-      return _animations[anim_name][key];
+  Graphics::Frame &Manager::animation(const std::string anim_name, const std::string action) { 
+      return _animations[anim_name][action];
   }
 
   std::string Manager::tilemap_path(const std::string map_name) { 
