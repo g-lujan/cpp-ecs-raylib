@@ -10,7 +10,7 @@
 
 struct Move_Action {
   Move_Action() {}
-  Move_Action(std::string id, std::function<void(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)> act) : 
+  Move_Action(const std::string &id, std::function<void(Kinematics &kinematics, std::unordered_set<Side> &collision_sides)> act) : 
       action_id{id}, action{act}
   {}
 

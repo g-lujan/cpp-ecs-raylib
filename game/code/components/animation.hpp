@@ -5,7 +5,7 @@
 #include "../management/serialization.hpp"
 
 struct Anim : public Component {
-  Anim(const std::string name, std::string tex, Graphics::Frame &frame) : name{name}, texture_id{tex}, frame{frame} {}
+  Anim(const std::string &name, const std::string &tex, Graphics::Frame &frame) : name{name}, texture_id{tex}, frame{frame} {}
 
   virtual std::string type_name() const { return "Anim"; }
 

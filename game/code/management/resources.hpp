@@ -17,9 +17,9 @@ namespace Resources {
   class Manager {
   public:
     Manager();
-    Graphics::Texture &texture(const std::string tex_name);
-    Graphics::Frame &animation(const std::string anim_name, const std::string action);
-    std::string tilemap_path(const std::string map_name);
+    Graphics::Texture &texture(const std::string &tex_name);
+    Graphics::Frame &animation(const std::string &anim_name, const std::string &action);
+    std::string tilemap_path(const std::string &map_name);
 
     // May implement ways to clear unused stuff from the Manager in the future
     // For now, the manager will be unique and will serve all views

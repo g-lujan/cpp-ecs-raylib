@@ -10,7 +10,7 @@
 
 namespace Graphics {
 
-  Texture::Texture(const std::string path_to_tex) { _tex = LoadTexture(path_to_tex.c_str()); }
+  Texture::Texture(const std::string &path_to_tex) { _tex = LoadTexture(path_to_tex.c_str()); }
 
   void Texture::draw(Rectangle src_rect, Vector2 dest, Color tint, float rotation, Flip flip)
   {
@@ -32,7 +32,7 @@ namespace Graphics {
     }
   }
 
-  Frame::Frame(std::string name, Vector2 start_pos, int fps)
+  Frame::Frame(const std::string &name, Vector2 start_pos, int fps)
       : action{name},
         start_pos{start_pos},
         src_rect{start_pos.x, start_pos.y, Settings::TILE_SIZE, Settings::TILE_SIZE},

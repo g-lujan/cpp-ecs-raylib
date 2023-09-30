@@ -15,7 +15,7 @@ namespace Graphics {
   class Texture {
   public:
     Texture() {}
-    Texture(const std::string path_to_tex);
+    Texture(const std::string &path_to_tex);
     ~Texture() { UnloadTexture(_tex); }
     void draw(Rectangle src_rect, Vector2 dest, Color tint, float rotation, Flip flip);
     int &width() { return _tex.width; }
@@ -27,7 +27,7 @@ namespace Graphics {
 
   struct Frame {
     Frame() {}
-    Frame(std::string name, Vector2 start_pos, int fps);
+    Frame(const std::string &name, Vector2 start_pos, int fps);
     void step(float rewind_offset = 0.f);
 
     std::string action;

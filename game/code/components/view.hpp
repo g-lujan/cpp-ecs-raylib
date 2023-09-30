@@ -4,7 +4,7 @@
 #include "../management/serialization.hpp"
 
 struct View : public Component {
-  View(Camera2D cam, Color tint, bool active, std::string map) : camera{cam}, tint{tint}, active{active}, map{map} {}
+  View(Camera2D cam, Color tint, bool active, const std::string &map) : camera{cam}, tint{tint}, active{active}, map{map} {}
 
   virtual std::string type_name() const { return "View"; }
 
