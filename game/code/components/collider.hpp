@@ -4,6 +4,7 @@
 #include "../utils/side.hpp"
 #include "components.hpp"
 #include <unordered_set>
+#include "raylib.h"
 
 enum class Body_Type {
   Player,

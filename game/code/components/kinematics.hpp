@@ -2,6 +2,7 @@
 
 #include "../management/serialization.hpp"
 #include "components.hpp"
+#include "raylib.h"
 
 struct Kinematics : public Component {
   Kinematics(Vector2 position) : position{position} {}

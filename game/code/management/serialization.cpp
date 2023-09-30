@@ -5,6 +5,7 @@
 
 #include "../components/all_components.hpp"
 #include "../ecs_core/components.hpp"
+#include "../ecs_core/component_registry.hpp"
 
 using json = nlohmann::json;
 
