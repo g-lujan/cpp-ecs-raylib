@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unordered_set>
-#include "components.hpp"
-#include "../utils/side.hpp"
 #include "../management/serialization.hpp"
+#include "../utils/side.hpp"
+#include "components.hpp"
+#include <unordered_set>
 
 enum class Body_Type {
   Player,
@@ -13,7 +13,6 @@ enum class Body_Type {
   Bullet,
   Sprite, // to delete when position and body decoupled
 };
-
 
 struct Collider : public Component {
   Collider(const Rectangle rect, const Body_Type type, bool kinematic) : bound{rect}, type{type}, rot{0.f}, kinematic{kinematic} {}

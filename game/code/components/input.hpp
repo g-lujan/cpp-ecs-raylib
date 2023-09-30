@@ -4,9 +4,9 @@
 
 struct Input : public Component {
   Input(bool active) : active{active} {}
-  
+
   virtual std::string type_name() const { return "Input"; }
-  
+
   virtual std::unique_ptr<Serializable> serialize()
   {
     nlohmann::json j = *this;

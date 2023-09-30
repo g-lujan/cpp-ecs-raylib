@@ -3,7 +3,6 @@
 
 #include "../../external/json.hpp"
 
-
 struct Serializable {
   nlohmann::json data;
   Serializable(nlohmann::json &data) : data(data) {}

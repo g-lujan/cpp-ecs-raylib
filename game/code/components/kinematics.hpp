@@ -1,11 +1,11 @@
 #pragma once
 
-#include "components.hpp"
 #include "../management/serialization.hpp"
+#include "components.hpp"
 
 struct Kinematics : public Component {
   Kinematics(Vector2 position) : position{position} {}
-  
+
   virtual std::string type_name() const { return "Kinematics"; }
 
   virtual std::unique_ptr<Serializable> serialize()

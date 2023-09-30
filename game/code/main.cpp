@@ -1,10 +1,10 @@
 #include "ecs.hpp"
-#include "raylib.h"
+#include "graphics/tilemap.hpp"
 #include "management/resources.hpp"
 #include "management/settings.hpp"
-#include "graphics/tilemap.hpp"
-#include "utils/time.hpp"
+#include "raylib.h"
 #include "systems/available_systems.hpp"
+#include "utils/time.hpp"
 
 int main(void)
 {
@@ -12,8 +12,7 @@ int main(void)
   SetTargetFPS(Settings::FPS);
   ECS ecs;
   bool loaded_map = Tilemap::load(ecs, "hometown");
-  while (!WindowShouldClose() && loaded_map)
-  {
+  while (!WindowShouldClose() && loaded_map) {
     cap_framerate();
     // order matters
     ecs.run_system<System::Input>();

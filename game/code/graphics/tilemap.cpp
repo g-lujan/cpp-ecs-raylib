@@ -1,17 +1,16 @@
 #include "tilemap.hpp"
-#include "../ecs_core/ecs.hpp"
-#include "../management/settings.hpp"
 #include "../../external/json.hpp"
-#include "../management/resources.hpp"
 #include "../components/all_components.hpp"
+#include "../ecs_core/ecs.hpp"
+#include "../management/resources.hpp"
+#include "../management/settings.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <optional>
 
-
 namespace Tilemap {
-    using json = nlohmann::json;
+  using json = nlohmann::json;
 
   // Bits on the far end of the 32-bit gid are used for tile flags
   // Reference: https://doc.mapeditor.org/en/stable/reference/global-tile-ids/#tile-flipping
@@ -29,13 +28,13 @@ namespace Tilemap {
   static bool is_tileset_valid(std::optional<json> &tileset_json);
   static float tile_rotation(const int raw_tile_id);
   static Graphics::Flip tile_flip(const int raw_tile_id);
-  
+
   // Spawn functions
   static void spawn_actors(Tilemap::json &layer, ECS &ecs, Resources::Manager &resources_manager);
   static void spawn_collision_entities(json &layer, ECS &ecs);
   static void spawn_tiles(const int num_tileset_cols, const int map_width_in_tiles, Tilemap::json &layer, ECS &ecs, Graphics::Texture *texture);
 
-   /**********************************************
+  /**********************************************
    * IMPL OF PUBLIC FUNCTIONS                    *
    ***********************************************/
 
@@ -108,11 +107,7 @@ namespace Tilemap {
     }
   }
 
-  static void
-  spawn_tiles(const int num_tileset_cols, const int map_width_in_tiles,
-                   Tilemap::json &layer,
-                   ECS &ecs,
-                   Graphics::Texture *texture)
+  static void spawn_tiles(const int num_tileset_cols, const int map_width_in_tiles, Tilemap::json &layer, ECS &ecs, Graphics::Texture *texture)
   {
     for (int tile_x = 0, tile_y = 0, tile_count = 0; tile_count < layer["data"].size(); ++tile_x, ++tile_count) {
       if (tile_x == map_width_in_tiles) {
@@ -129,11 +124,8 @@ namespace Tilemap {
       int src_y = 32 * (int)((tile_id - 1) / num_tileset_cols);
       float rotation = tile_rotation(raw_tile_id);
       Graphics::Flip flip = tile_flip(raw_tile_id);
-      ecs.spawn_entity(Tile(texture,
-                            Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32},
-                            flip,
-                            rotation),
-          Kinematics(Vector2(static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32))));
+      ecs.spawn_entity(Tile(texture, Rectangle{static_cast<float>(src_x), static_cast<float>(src_y), 32, 32}, flip, rotation),
+                       Kinematics(Vector2(static_cast<float>(tile_x * 32), static_cast<float>(tile_y * 32))));
     }
   }
 
@@ -145,11 +137,9 @@ namespace Tilemap {
     }
   }
 
-
   /************************************
-  * UTILITY FUNCTIONS IMPLEMENTATIONS *
-  *************************************/
-
+   * UTILITY FUNCTIONS IMPLEMENTATIONS *
+   *************************************/
 
   static std::optional<json> load_and_parse_json(const std::string &path)
   {

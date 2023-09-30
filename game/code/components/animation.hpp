@@ -1,8 +1,8 @@
 #pragma once
 
-#include "components.hpp"
 #include "../graphics/graphics.hpp"
 #include "../management/serialization.hpp"
+#include "components.hpp"
 
 struct Anim : public Component {
   Anim(const std::string &name, const std::string &tex, Graphics::Frame &frame) : name{name}, texture_id{tex}, frame{frame} {}

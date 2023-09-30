@@ -15,7 +15,6 @@ void serialize_component(const unsigned long long id, nlohmann::json &output, Co
   }
 }
 
-
 void save(nlohmann::json &output)
 {
   std::ofstream o("save_file.json");
@@ -28,7 +27,8 @@ void save(nlohmann::json &output)
 
 void to_json(nlohmann::json &j, const Vector2 &vec2) { j = json{{"x", vec2.x}, {"y", vec2.y}}; }
 
-void from_json(const nlohmann::json &j, Vector2 &vec2) {
+void from_json(const nlohmann::json &j, Vector2 &vec2)
+{
   j.at("x").get_to(vec2.x);
   j.at("y").get_to(vec2.y);
 }
@@ -53,39 +53,35 @@ void from_json(const json &j, Health &health)
 
 void to_json(nlohmann::json &j, const Player &player) { j = json{{"player", true}}; }
 
-void from_json(const nlohmann::json& j, Player& player) {
-  j.at("player_id").get_to(player.entity_id);
+void from_json(const nlohmann::json &j, Player &player) { j.at("player_id").get_to(player.entity_id); }
+
+void to_json(nlohmann::json &j, const Kinematics &kinematics)
+{
+  j = json{{"position", kinematics.position}, {"velocity", kinematics.velocity}, {"acceleration", kinematics.acceleration}};
 }
 
-void to_json(nlohmann::json &j, const Kinematics &kinematics) { 
-    j = json{
-        {"position", kinematics.position},
-        {"velocity", kinematics.velocity},
-        {"acceleration", kinematics.acceleration}
-    }; 
+void from_json(const nlohmann::json &j, Kinematics &kinematics)
+{
+  j.at("position").get_to(kinematics.position);
+  j.at("velocity").get_to(kinematics.velocity);
+  j.at("acceleration").get_to(kinematics.acceleration);
 }
 
-void from_json(const nlohmann::json& j, Kinematics& kinematics) {
-    j.at("position").get_to(kinematics.position);
-    j.at("velocity").get_to(kinematics.velocity);
-    j.at("acceleration").get_to(kinematics.acceleration);
+void to_json(nlohmann::json &j, const Collider &collider)
+{
+  j = json{{"bound", collider.bound},
+           {"type", collider.type},
+           {"collision_sides", collider.collision_sides},
+           {"rot", collider.rot},
+           {"kinematic", collider.kinematic}};
 }
-
-void to_json(nlohmann::json &j, const Collider &collider) { 
-    j = json{
-        {"bound", collider.bound}, 
-        {"type", collider.type}, 
-        {"collision_sides", collider.collision_sides}, 
-        {"rot", collider.rot}, 
-        {"kinematic", collider.kinematic}
-    };
-}
-void from_json(const nlohmann::json &j, Collider &collider) { 
-    j.at("bound").get_to(collider.bound);
-    j.at("type").get_to(collider.type);
-    j.at("collision_sides").get_to(collider.collision_sides);
-    j.at("rot").get_to(collider.rot);
-    j.at("kinematic").get_to(collider.kinematic);
+void from_json(const nlohmann::json &j, Collider &collider)
+{
+  j.at("bound").get_to(collider.bound);
+  j.at("type").get_to(collider.type);
+  j.at("collision_sides").get_to(collider.collision_sides);
+  j.at("rot").get_to(collider.rot);
+  j.at("kinematic").get_to(collider.kinematic);
 }
 
 void to_json(nlohmann::json &j, const Anim &anim) { return; }

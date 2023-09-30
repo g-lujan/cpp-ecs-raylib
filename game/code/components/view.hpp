@@ -1,7 +1,7 @@
 #pragma once
 
-#include "components.hpp"
 #include "../management/serialization.hpp"
+#include "components.hpp"
 
 struct View : public Component {
   View(Camera2D cam, Color tint, bool active, const std::string &map) : camera{cam}, tint{tint}, active{active}, map{map} {}

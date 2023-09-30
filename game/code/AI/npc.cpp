@@ -1,6 +1,6 @@
-#include <random>
 #include "npc.hpp"
 #include "../components/ai.hpp"
+#include <random>
 
 std::vector<KeyboardKey> NPC::keys_down(AI &ai)
 {

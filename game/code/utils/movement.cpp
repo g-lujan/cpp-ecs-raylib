@@ -4,19 +4,19 @@
 using std::min;
 
 /*
-* +------------------+                  +
-* |                  |                  |
-* |                  |                  |
-* |      rect  d1    |      d2          |
-* |        +---------x-------------+    |
-* |     d3 |         |             |    | d4
-* +--------x---------+             |    |
-*          |      other            |    |
-*          |                       |    |
-*          |                       |    |
-*          |                       |    |
-*          +-----------------------+    +
-*/
+ * +------------------+                  +
+ * |                  |                  |
+ * |                  |                  |
+ * |      rect  d1    |      d2          |
+ * |        +---------x-------------+    |
+ * |     d3 |         |             |    | d4
+ * +--------x---------+             |    |
+ *          |      other            |    |
+ *          |                       |    |
+ *          |                       |    |
+ *          |                       |    |
+ *          +-----------------------+    +
+ */
 
 Side get_collision_side(const Rectangle &rect, const Rectangle &other)
 {
@@ -34,11 +34,8 @@ Side get_collision_side(const Rectangle &rect, const Rectangle &other)
 
   const int min_distance = min(min_distance_right_to_left, min_distance_lower_to_top);
 
-  return min_distance == distance_from_rect_right_border_to_other_left_border ? Side::RIGHT
-         : 
-         min_distance == distance_from_other_right_border_to_rect_left_border ? Side::LEFT
-         : 
-         min_distance == distance_from_other_lower_border_to_rect_top_border  ? Side::TOP
-         : 
-         Side::BOTTON;
+  return min_distance == distance_from_rect_right_border_to_other_left_border   ? Side::RIGHT
+         : min_distance == distance_from_other_right_border_to_rect_left_border ? Side::LEFT
+         : min_distance == distance_from_other_lower_border_to_rect_top_border  ? Side::TOP
+                                                                                : Side::BOTTON;
 };

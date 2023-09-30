@@ -3,15 +3,15 @@
 #include "raymath.h"
 #include <algorithm>
 
-#include "../utils/movement.hpp"
-#include "../AI/npc.hpp"
-#include "../utils/time.hpp"
-#include "../management/settings.hpp"
-#include "../management/resources.hpp"
-#include "../components/all_components.hpp"
-#include "../management/serialization.hpp"
 #include "../../external/json.hpp"
+#include "../AI/npc.hpp"
+#include "../components/all_components.hpp"
+#include "../management/resources.hpp"
+#include "../management/serialization.hpp"
+#include "../management/settings.hpp"
 #include "../systems/available_systems.hpp"
+#include "../utils/movement.hpp"
+#include "../utils/time.hpp"
 
 template <> void ECS::run_system<System::Tile>()
 {
@@ -57,9 +57,7 @@ template <> void ECS::run_system<System::Animation>()
       float dist_x = std::abs(curr_view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 4) {
         curr_anim.frame.step(curr_anim.frame.action != "jump" ? 0.f : 32.f);
-        Resources::get_resource_manager()
-            .texture(curr_anim.texture_id)
-            .draw(curr_anim.frame.src_rect, position, curr_view.tint, 0.f, curr_anim.flip);
+        Resources::get_resource_manager().texture(curr_anim.texture_id).draw(curr_anim.frame.src_rect, position, curr_view.tint, 0.f, curr_anim.flip);
       }
     }
     EndMode2D();
@@ -84,8 +82,7 @@ template <> void ECS::run_system<System::Player_Animation>()
     if (kinematics.velocity.y != 0.f) {
       auto &jump_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, "jump");
       // check if anim has changed
-      if (jump_anim_settings.start_pos.x != curr_anim.frame.start_pos.x ||
-          jump_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
+      if (jump_anim_settings.start_pos.x != curr_anim.frame.start_pos.x || jump_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
         // update animation
         curr_anim.frame = jump_anim_settings;
       }
@@ -98,8 +95,7 @@ template <> void ECS::run_system<System::Player_Animation>()
     for (KeyboardKey &key : keys_pressed) {
       auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, player_controls.key_to_movement[key].action_id);
       // check if anim has changed
-      if (new_anim_settings.start_pos.x != curr_anim.frame.start_pos.x ||
-          new_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
+      if (new_anim_settings.start_pos.x != curr_anim.frame.start_pos.x || new_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
         // update animation
         curr_anim.frame = Resources::get_resource_manager().animation(curr_anim.name, player_controls.key_to_movement[key].action_id);
       }
@@ -149,7 +145,7 @@ static void step_kinematics(Kinematics &kinematics)
   kinematics.velocity.x += kinematics.acceleration.x * dt;
   kinematics.position.y += kinematics.velocity.y * dt + (kinematics.acceleration.y * dt * dt) / 2;
   const float TERMINAL_VELOCITY = 100.f;
-  kinematics.velocity.y += kinematics.velocity.y < TERMINAL_VELOCITY? 3 * kinematics.acceleration.y * dt : 0.f;
+  kinematics.velocity.y += kinematics.velocity.y < TERMINAL_VELOCITY ? 3 * kinematics.acceleration.y * dt : 0.f;
 };
 
 template <> void ECS::run_system<System::Physics>()
@@ -186,7 +182,8 @@ template <> void ECS::run_system<System::Physics>()
   }
 }
 
-void push_if_keydown(KeyboardKey key, std::vector<KeyboardKey> &keys) {
+void push_if_keydown(KeyboardKey key, std::vector<KeyboardKey> &keys)
+{
   if (IsKeyDown(key)) {
     keys.push_back(key);
   }
@@ -216,7 +213,8 @@ template <> void ECS::run_system<System::Input>()
   }
 }
 
-template <> void ECS::run_system<System::AI>() {
+template <> void ECS::run_system<System::AI>()
+{
   Component_Registry<Input> *input_registry = component_registry<Input>();
   Component_Registry<AI> *ai_registry = component_registry<AI>();
 
@@ -225,47 +223,46 @@ template <> void ECS::run_system<System::AI>() {
   }
 }
 
-
 template <> void ECS::run_system<System::InGameMenu>()
-{ 
-    serialize();
-    Component_Registry<Input> *input_registry = component_registry<Input>();
-    Component_Registry<Player> *player_registry = component_registry<Player>();
-    ECS subsystem;
-    for (const auto &id : player_registry->all_ids()) {
-        const auto &keys_pressed = input_registry->get(id).keys_pressed;
-        if (std::find(keys_pressed.begin(), keys_pressed.end(), KEY_ENTER) == keys_pressed.end()) {
-            continue;
-        }
-        unsigned long long menu_id = subsystem.spawn_entity(Input(true));
-        Component_Registry<Input> *menu_input_registry = subsystem.component_registry<Input>();
-        // it's flickering
-        while (!WindowShouldClose()) {
-            cap_framerate();
-            BeginDrawing();
-            auto &menu_keys_pressed = menu_input_registry->get(menu_id).keys_pressed;
-            if (std::find(menu_keys_pressed.begin(), menu_keys_pressed.end(), KEY_ENTER) != menu_keys_pressed.end()) {
-                break;
-            }
-            EndDrawing();
-            // it needs to be called after drawing, else it will return the same value every time
-            // you can improve it after adding an image for the menu
-            subsystem.run_system<System::Input>();
-        }
+{
+  serialize();
+  Component_Registry<Input> *input_registry = component_registry<Input>();
+  Component_Registry<Player> *player_registry = component_registry<Player>();
+  ECS subsystem;
+  for (const auto &id : player_registry->all_ids()) {
+    const auto &keys_pressed = input_registry->get(id).keys_pressed;
+    if (std::find(keys_pressed.begin(), keys_pressed.end(), KEY_ENTER) == keys_pressed.end()) {
+      continue;
     }
+    unsigned long long menu_id = subsystem.spawn_entity(Input(true));
+    Component_Registry<Input> *menu_input_registry = subsystem.component_registry<Input>();
+    // it's flickering
+    while (!WindowShouldClose()) {
+      cap_framerate();
+      BeginDrawing();
+      auto &menu_keys_pressed = menu_input_registry->get(menu_id).keys_pressed;
+      if (std::find(menu_keys_pressed.begin(), menu_keys_pressed.end(), KEY_ENTER) != menu_keys_pressed.end()) {
+        break;
+      }
+      EndDrawing();
+      // it needs to be called after drawing, else it will return the same value every time
+      // you can improve it after adding an image for the menu
+      subsystem.run_system<System::Input>();
+    }
+  }
 }
 
 void ECS::serialize()
 {
-    nlohmann::json output;
+  nlohmann::json output;
 
-    for (auto &&[id, to_purge] : _entities) {
-        if (to_purge) {
-            continue;
-        }
-        for (auto &&[type, registry] : _component_registries) {
-            serialize_component(id, output, registry.get());
-        }
+  for (auto &&[id, to_purge] : _entities) {
+    if (to_purge) {
+      continue;
     }
-    save(output);
+    for (auto &&[type, registry] : _component_registries) {
+      serialize_component(id, output, registry.get());
+    }
+  }
+  save(output);
 }

@@ -1,7 +1,7 @@
 #ifndef AI_H_
 
-#include <vector>
 #include <raylib.h>
+#include <vector>
 
 struct AI;
 

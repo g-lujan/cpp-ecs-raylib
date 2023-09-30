@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace System {
   struct Physics {};
   struct Input {};

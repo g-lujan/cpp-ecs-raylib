@@ -1,7 +1,7 @@
 #pragma once
 
-#include "components.hpp"
 #include "../graphics/graphics.hpp"
+#include "components.hpp"
 
 struct Tile : public Component {
   Tile(Graphics::Texture *tex, Rectangle src_rect, Graphics::Flip flip, float rotation = 0.f)

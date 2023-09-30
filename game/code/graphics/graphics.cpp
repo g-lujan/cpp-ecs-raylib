@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 
-#include "../management/settings.hpp"
 #include "../../external/json.hpp"
 #include "../management/settings.hpp"
 
