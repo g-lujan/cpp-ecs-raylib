@@ -36,7 +36,7 @@ namespace Graphics {
 
     int step_size; // the x step of the animation on the texture
     int fps;
-    int frames{4};
+    int frames{14};
 
     /*
      * frames_counter: Counts the amount of game frames elapsed since last animation frame.

@@ -13,6 +13,8 @@
 #include "../utils/movement.hpp"
 #include "../utils/time.hpp"
 
+#include <iostream>
+
 /**********************************************
  * Forward declaration of Utilitary functions *
  **********************************************/
@@ -57,7 +59,7 @@ template <> void ECS::run_system<System::Animation>()
       Vector2 position = {anim_pos.bound.x, anim_pos.bound.y};
       float dist_x = std::abs(view.camera.target.x - position.x);
       if (dist_x < Settings::SCREEN_WIDTH / 4) {
-        curr_anim.frame.step(curr_anim.frame.action != "jump" ? 0.f : 32.f);
+        curr_anim.frame.step();
         Resources::get_resource_manager().texture(curr_anim.texture_id).draw(curr_anim.frame.src_rect, position, view.tint, 0.f, curr_anim.flip);
       }
     }
@@ -73,27 +75,28 @@ template <> void ECS::run_system<System::Player_Animation>()
     curr_anim.flip.horizontally = kinematics.velocity.x < 0.f ? true : kinematics.velocity.x > 0.f ? false : curr_anim.flip.horizontally;
     auto &keys_pressed = component<Input>(player_id).keys_pressed;
 
-    if (kinematics.velocity.y != 0.f) {
-      auto &jump_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, "jump");
-      // check if anim has changed
-      if (jump_anim_settings.start_pos.x != curr_anim.frame.start_pos.x || jump_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
-        // update animation
-        curr_anim.frame = jump_anim_settings;
-      }
-      return;
-    }
-    else if (keys_pressed.empty()) {
+    if (keys_pressed.empty()) {
       auto &player_controls = component<Controls>(player_id);
-      curr_anim.frame = Resources::get_resource_manager().animation(curr_anim.name, player_controls.key_to_movement[KEY_NULL].action_id);
+      std::string idle_anim = kinematics.orientation.x > 0.f   ? "idle_right"
+                               : kinematics.orientation.x < 0.f ? "idle_left"
+                               : kinematics.orientation.y > 0.f ? "idle_down"
+                               :"idle_up";
+      auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, idle_anim);
+      // check if anim has changed
+      if (new_anim_settings.start_pos.x != curr_anim.frame.start_pos.x || new_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
+        // update animation
+        curr_anim.frame = Resources::get_resource_manager().animation(curr_anim.name, idle_anim);
+      }
     }
 
     for (KeyboardKey &key : keys_pressed) {
       auto &player_controls = component<Controls>(player_id);
-      auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, player_controls.key_to_movement[key].action_id);
+      std::string anim_id = player_controls.key_to_movement[key].action_id;
+      auto &new_anim_settings = Resources::get_resource_manager().animation(curr_anim.name, anim_id);
       // check if anim has changed
       if (new_anim_settings.start_pos.x != curr_anim.frame.start_pos.x || new_anim_settings.start_pos.y != curr_anim.frame.start_pos.y) {
         // update animation
-        curr_anim.frame = Resources::get_resource_manager().animation(curr_anim.name, player_controls.key_to_movement[key].action_id);
+        curr_anim.frame = Resources::get_resource_manager().animation(curr_anim.name, anim_id);
       }
     }
   }
@@ -115,6 +118,7 @@ template <> void ECS::run_system<System::Player_Movement>()
     auto &player_body = component<Collider>(id);
     auto &kinematics = component<Kinematics>(id);
     kinematics.velocity.x = 0;
+    kinematics.velocity.y = 0;
     for (const KeyboardKey &key : component<Input>(id).keys_pressed) {
       component<Controls>(id).key_to_movement.at(key).action(kinematics, player_body.collision_sides);
     }
@@ -140,15 +144,6 @@ template <> void ECS::run_system<System::Physics>()
         body.collision_sides.insert(collision_side);
       }
     }
-    // gravity
-    auto &kinematics = component<Kinematics>(id);
-    if (!body.collision_sides.contains(Side::BOTTON)) {
-      kinematics.acceleration.y = 70;
-    }
-    else {
-      kinematics.acceleration.y = 0;
-      kinematics.velocity.y = 0;
-    }
   }
 }
 
@@ -166,7 +161,7 @@ template <> void ECS::run_system<System::Input>()
 template <> void ECS::run_system<System::AI>()
 {
   for (const auto &id : all_components<AI>()) {
-    component<Input>(id).keys_pressed = NPC::keys_down(component<AI>(id));
+    //component<Input>(id).keys_pressed = NPC::keys_down(component<AI>(id));
   }
 }
 
@@ -220,9 +215,7 @@ static void step_kinematics(Kinematics &kinematics)
   const float dt = GetFrameTime();
   kinematics.position.x += kinematics.velocity.x * dt + (kinematics.acceleration.x * dt * dt) / 2;
   kinematics.velocity.x += kinematics.acceleration.x * dt;
-  kinematics.position.y += kinematics.velocity.y * dt + (kinematics.acceleration.y * dt * dt) / 2;
-  const float TERMINAL_VELOCITY = 100.f;
-  kinematics.velocity.y += kinematics.velocity.y < TERMINAL_VELOCITY ? 3 * kinematics.acceleration.y * dt : 0.f;
+  kinematics.position.y += kinematics.velocity.y * dt;//  +(kinematics.acceleration.y * dt * dt) / 2;
 }
 
 static void push_if_keydown(KeyboardKey key, std::vector<KeyboardKey> &keys)
@@ -237,9 +230,11 @@ static void update_keys_down(std::vector<KeyboardKey> &keys)
   keys.clear();
   push_if_keydown(KEY_LEFT, keys);
   push_if_keydown(KEY_RIGHT, keys);
-  push_if_keydown(KEY_SPACE, keys);
+  push_if_keydown(KEY_UP, keys);
+  push_if_keydown(KEY_DOWN, keys);
   push_if_keydown(KEY_ENTER, keys);
   push_if_keydown(KEY_A, keys);
   push_if_keydown(KEY_W, keys);
   push_if_keydown(KEY_D, keys);
+  push_if_keydown(KEY_S, keys);
 }

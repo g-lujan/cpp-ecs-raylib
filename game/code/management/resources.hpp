@@ -9,7 +9,7 @@
 namespace Resources {
   namespace Paths {
     inline constexpr auto BASE_PATH = "resources/images/";
-    inline constexpr auto PLAYER_RED = "resources/images/red.png";
+    inline constexpr auto PLAYER_SLIME = "resources/images/slime.png";
     inline constexpr auto HOMETOWN_IMAGE = "resources/images/hometown.png";
     inline constexpr auto HOMETOWN_JSON = "resources/images/ville.json";
   } // namespace Paths

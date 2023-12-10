@@ -7,14 +7,21 @@ namespace Resources {
   Manager::Manager()
   {
     _textures.insert(std::make_pair("empty", Graphics::Texture()));
-    _textures.emplace("player", Paths::PLAYER_RED);
+    _textures.emplace("player", Paths::PLAYER_SLIME);
     _textures.emplace("hometown", Paths::HOMETOWN_IMAGE);
     _animations.emplace(std::make_pair(
         "player",
-        std::unordered_map<std::string, Graphics::Frame>({std::make_pair("idle", Graphics::Frame("idle", Vector2{0, 0}, 3)),
-                                                          std::make_pair("move_right", Graphics::Frame("move_right", Vector2{0, 32}, 8)),
-                                                          std::make_pair("move_left", Graphics::Frame("move_left", Vector2{0, 32}, 8)),
-                                                          std::make_pair("jump", Graphics::Frame("jump", Vector2{0, 64}, 4))})));
+        std::unordered_map<std::string, Graphics::Frame>(
+            {std::make_pair("idle_right", Graphics::Frame("idle_right", Vector2{0, 32 * 0}, 3)),
+             std::make_pair("idle_left", Graphics::Frame("idle_left", Vector2{0, 32 * 0}, 3)),
+             std::make_pair("move_right", Graphics::Frame("move_right", Vector2{0, 32 * 1}, 15)),
+             std::make_pair("move_left", Graphics::Frame("move_left", Vector2{0, 32 * 1}, 15)),
+             std::make_pair("move_down", Graphics::Frame("move_down", Vector2{0, 32 * 2}, 15)), 
+             std::make_pair("move_up", Graphics::Frame("move_up", Vector2{0, 32 * 3}, 15)),
+             std::make_pair("idle_down", Graphics::Frame("idle_down", Vector2{0, 32 * 4}, 3)),
+             std::make_pair("idle_up", Graphics::Frame("idle_up", Vector2{0, 32 * 5}, 3))
+            }))
+    );
     _tilemaps_paths.emplace("hometown", Paths::HOMETOWN_JSON);
   }
 

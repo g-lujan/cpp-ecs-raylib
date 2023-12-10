@@ -1,2 +1,6 @@
 /build*
 !build.bat
+*.tiled-project
+*.tiled-session
+*.aseprite
+*.ase

@@ -6,7 +6,7 @@ set(SOURCE_FILES
 	code/management/resources.cpp 
 	code/management/resources.hpp
 	code/management/settings.hpp
-        code/graphics/graphics.cpp
+    code/graphics/graphics.cpp
 	code/graphics/graphics.hpp
 	code/graphics/tilemap.cpp
 	code/graphics/tilemap.hpp

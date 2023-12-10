@@ -36,6 +36,7 @@ public:
   template <typename... ComponentTypes> unsigned long long spawn_entity(ComponentTypes... components)
   {
     unsigned long long entity_id = create();
+    // https://stackoverflow.com/questions/68872572/lambda-call-operator-and-parenthesized-lambda
     (
         [&] {
           components.entity_id = entity_id;
