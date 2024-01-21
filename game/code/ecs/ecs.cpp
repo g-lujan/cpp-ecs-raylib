@@ -114,12 +114,11 @@ template <> void ECS::run_system<System::Draw>()
 
 template <> void ECS::run_system<System::Player_Movement>()
 {
-  auto test = all_components<Player, Kinematics, Collider, Input, Controls>();
   for (const auto &id : all_components<Player, Kinematics, Collider, Input, Controls>()) {
     auto &player_body = component<Collider>(id);
     auto &kinematics = component<Kinematics>(id);
-    kinematics.velocity.x = 0;
-    kinematics.velocity.y = 0;
+    kinematics.velocity.x = 0.f;
+    kinematics.velocity.y = 0.f;
     for (const KeyboardKey &key : component<Input>(id).keys_pressed) {
       component<Controls>(id).key_to_movement.at(key).action(kinematics, player_body.collision_sides);
     }
@@ -196,12 +195,9 @@ void ECS::serialize()
 {
   nlohmann::json output;
 
-  for (auto &&[id, to_purge] : _entities) {
-    if (to_purge) {
-      continue;
-    }
+  for (int i = 0; i < _latest; ++i) {
     for (auto &&[type, registry] : _component_registries) {
-      serialize_component(id, output, registry.get());
+      serialize_component(i, output, registry.get());
     }
   }
   save(output);

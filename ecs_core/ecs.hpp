@@ -18,19 +18,7 @@ public:
   unsigned long long create()
   {
     _latest++;
-    _entities.insert({_latest, false});
     return _latest;
-  }
-
-  void mark_purge(const unsigned long long entity_id) { _entities.insert({entity_id, true}); }
-
-  void purge()
-  {
-    for (const auto &[entity_id, value] : _entities) {
-      if (_entities.find(entity_id) != _entities.end()) {
-        _entities.erase(_entities.find(entity_id));
-      }
-    }
   }
 
   template <typename... ComponentTypes> unsigned long long spawn_entity(ComponentTypes... components)
@@ -55,6 +43,7 @@ public:
     return static_cast<Component_Registry<T> *>(_component_registries[typeid(T)].get());
   }
 
+  /* bad, needs to go through all components involved */
   template <typename... ComponentTypes> std::vector<unsigned long long> all_components()
   {
     auto types = FILTER<ComponentTypes...>();
@@ -82,7 +71,6 @@ public:
   void serialize();
 
 private:
-  std::unordered_map<unsigned long long, bool> _entities;
   std::unordered_map<std::type_index, std::unique_ptr<Component_Registry_Base>> _component_registries;
   unsigned long long _latest;
 };
