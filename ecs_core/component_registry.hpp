@@ -1,14 +1,14 @@
 #ifndef _COMPONENT_REGISTRY_H__
 #define _COMPONENT_REGISTRY_H__
 
+#include "components.hpp"
 #include <algorithm>
 #include <memory>
+#include <optional>
 #include <ranges>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <optional>
-#include "components.hpp"
 
 class Component_Registry_Base {
 public:
@@ -16,7 +16,6 @@ public:
   virtual bool serializable(const unsigned long long id) = 0;
   virtual std::unique_ptr<Serializable> serialize(const unsigned long long id) = 0;
   virtual std::string type_name() const = 0;
-  virtual std::vector<unsigned long long> all_ids() = 0;
 };
 
 template <typename T> class Component_Registry : public Component_Registry_Base {
@@ -25,24 +24,16 @@ template <typename T> class Component_Registry : public Component_Registry_Base 
 public:
   void record(const unsigned long long id, const T &component) { _components.insert({id, component}); }
 
-  T& get(const unsigned long long id) { return _components.at(id);}
+  T &get(const unsigned long long id) { return _components.at(id); }
 
   bool serializable(const unsigned long long id) { return get(id).serializable; }
 
   bool has(const unsigned long long id) { return _components.find(id) != _components.end(); }
   std::string type_name() const { return _id; }
 
-  std::vector<unsigned long long> all_ids()
-  {
-    auto keys = std::views::keys(_components);
-    return {keys.begin(), keys.end()};
-  }
+  std::ranges::view auto all_ids() const { return std::views::keys(_components); }
 
-  std::vector<T> all_components()
-  {
-    auto values = std::views::values(_components);
-    return {values.begin(), values.end()};
-  }
+  std::ranges::view auto all_components() const { return std::views::values(_components); }
 
   std::vector<unsigned long long> all_ids_ordered()
   {

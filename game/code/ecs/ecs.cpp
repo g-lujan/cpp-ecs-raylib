@@ -114,6 +114,7 @@ template <> void ECS::run_system<System::Draw>()
 
 template <> void ECS::run_system<System::Player_Movement>()
 {
+  auto test = all_components<Player, Kinematics, Collider, Input, Controls>();
   for (const auto &id : all_components<Player, Kinematics, Collider, Input, Controls>()) {
     auto &player_body = component<Collider>(id);
     auto &kinematics = component<Kinematics>(id);

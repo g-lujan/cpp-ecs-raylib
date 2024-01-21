@@ -1,8 +1,8 @@
 #ifndef _ECS_H__
 #define _ECS_H__
 
-#include "components.hpp"
 #include "component_registry.hpp"
+#include "components.hpp"
 #include <memory>
 #include <ranges>
 #include <typeindex>
@@ -13,7 +13,7 @@ template <typename... Type> constexpr std::unordered_set<std::type_index> FILTER
 
 class ECS {
 public:
-  ECS() {}
+  ECS() : _latest{0} {}
 
   unsigned long long create()
   {
@@ -55,19 +55,23 @@ public:
     return static_cast<Component_Registry<T> *>(_component_registries[typeid(T)].get());
   }
 
-  template <typename... Component_Types> std::vector<unsigned long long> all_components()
+  template <typename... ComponentTypes> std::vector<unsigned long long> all_components()
   {
-    auto types = FILTER<Component_Types...>();
+    auto types = FILTER<ComponentTypes...>();
     std::unordered_map<unsigned long long, int> id_freq;
     std::vector<unsigned long long> filtered_ids;
-    for (std::type_index type : types) {
-      for (auto id : _component_registries[type]->all_ids()) {
-        id_freq[id]++;
-        if (id_freq[id] == types.size()) {
-          filtered_ids.push_back(id);
-        }
-      }
-    }
+    (
+        [&] {
+          std::type_index component_type = typeid(ComponentTypes);
+          const auto &all_ids_of_type = static_cast<Component_Registry<ComponentTypes> *>(_component_registries[component_type].get())->all_ids();
+          for (auto &id : all_ids_of_type) {
+            id_freq[id]++;
+            if (id_freq[id] == types.size()) {
+              filtered_ids.push_back(id);
+            }
+          }
+        }(),
+        ...);
     return filtered_ids;
   }
 
@@ -80,7 +84,7 @@ public:
 private:
   std::unordered_map<unsigned long long, bool> _entities;
   std::unordered_map<std::type_index, std::unique_ptr<Component_Registry_Base>> _component_registries;
-  unsigned long long _latest{0};
+  unsigned long long _latest;
 };
 
 #endif
