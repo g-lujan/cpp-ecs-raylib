@@ -8,7 +8,7 @@ struct Serializable {
   Serializable(nlohmann::json &data) : data(data) {}
 };
 
-struct Component_Registry_Base;
+class Component_Registry_Base;
 
 void serialize_component(const unsigned long long id, nlohmann::json &output, Component_Registry_Base *registry);
 void save(nlohmann::json &output);

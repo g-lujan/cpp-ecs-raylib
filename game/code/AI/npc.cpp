@@ -4,10 +4,9 @@
 
 std::vector<KeyboardKey> NPC::keys_down(AI &ai)
 {
-  float curr_time = GetTime();
-
   std::vector<KeyboardKey> keys;
-  if (curr_time - ai.last_call > 1.f) {
+  const float time_since_last_frame = GetFrameTime();
+  if (time_since_last_frame - ai.last_call > 1.f) {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist9(1, 9);
@@ -24,7 +23,7 @@ std::vector<KeyboardKey> NPC::keys_down(AI &ai)
       keys.push_back(KEY_SPACE);
       ai.last_action = KEY_SPACE;
     }
-    ai.last_call = GetTime();
+    ai.last_call = time_since_last_frame;
   }
   else {
     keys.push_back(ai.last_action);

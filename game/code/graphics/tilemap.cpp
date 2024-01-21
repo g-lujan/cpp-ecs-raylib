@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <string>
 
 namespace Tilemap {
   using json = nlohmann::json;
@@ -71,6 +72,7 @@ namespace Tilemap {
         spawn_actors(layer, ecs, resources_manager);
       }
     }
+    return true;
   }
 
   /*******************************
@@ -145,7 +147,15 @@ namespace Tilemap {
   {
     std::ifstream loaded_json_stream(path);
     if (!loaded_json_stream.is_open()) {
-      std::cerr << "Failed to open file: " << path << ". Error: " << strerror(errno) << std::endl;
+#ifdef _WIN32 
+        // https://developercommunity.visualstudio.com/t/strerrorlen_s-function-not-implemented/780241?space=62&q=__builtin_function
+        std::cerr << "Failed to open file: " << path << ". Error: " << strerror(errno) << std::endl;
+#else
+      size_t errmsglen = strerrorlen_s(errno) + 1;
+      char errmsg[errmsglen];
+      strerror_s(errmsg, errmsglen, errno);
+      std::cerr << "Failed to open file: " << path << ". Error: " << errmsg << std::endl;
+#endif
       return {};
     }
     try {
@@ -170,7 +180,7 @@ namespace Tilemap {
     bool horizontal_flip = (raw_tile_id & FLIPPED_HORIZONTALLY_FLAG);
     bool vertical_flip = (raw_tile_id & FLIPPED_VERTICALLY_FLAG);
     bool anti_diag_flip = (raw_tile_id & FLIPPED_DIAGONALLY_FLAG);
-    return anti_diag_flip && horizontal_flip ? 90 : anti_diag_flip && vertical_flip ? -90 : 0;
+    return anti_diag_flip && horizontal_flip ? 90.f : anti_diag_flip && vertical_flip ? -90.f : 0.f;
   }
 
   static Graphics::Flip tile_flip(const int raw_tile_id)
