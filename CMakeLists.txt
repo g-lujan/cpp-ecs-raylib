@@ -6,3 +6,4 @@ project(game VERSION 0.0.1 DESCRIPTION "A game")
 
 add_subdirectory(ecs_core)
 add_subdirectory(game)
+add_subdirectory(perf_test)
