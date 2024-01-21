@@ -6,16 +6,16 @@ set(SOURCE_FILES
 	code/management/resources.cpp 
 	code/management/resources.hpp
 	code/management/settings.hpp
-    code/graphics/graphics.cpp
+        code/graphics/graphics.cpp
 	code/graphics/graphics.hpp
 	code/graphics/tilemap.cpp
 	code/graphics/tilemap.hpp
-	code/utils/movement.cpp
-	code/utils/movement.hpp
 	code/AI/npc.cpp
 	code/AI/npc.hpp
 	code/management/serialization.cpp
 	code/management/serialization.hpp
+        code/utils/movement.cpp
+	code/utils/movement.hpp
 	code/utils/time.hpp
 	code/utils/time.cpp
 	code/utils/side.hpp
@@ -35,6 +35,8 @@ set(SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib opengl32 gdi32 winmm ecs_core)
 
 file(COPY resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Debug")
