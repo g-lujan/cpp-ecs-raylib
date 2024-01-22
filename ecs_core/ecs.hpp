@@ -8,6 +8,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 template <typename... Type> constexpr std::unordered_set<std::type_index> FILTER() { return {typeid(Type)...}; }
 
@@ -27,12 +28,13 @@ public:
     // https://stackoverflow.com/questions/68872572/lambda-call-operator-and-parenthesized-lambda
     (
         [&] {
-          components.entity_id = entity_id;
           std::type_index component_type = typeid(components);
           if (_component_registries.find(component_type) == _component_registries.end()) {
             _component_registries.emplace(std::make_pair(component_type, std::make_unique<Component_Registry<decltype(components)>>()));
           }
+          components.id = entity_id;
           static_cast<Component_Registry<decltype(components)> *>(_component_registries[component_type].get())->record(entity_id, components);
+
         }(),
         ...);
     return entity_id;
@@ -43,28 +45,33 @@ public:
     return static_cast<Component_Registry<T> *>(_component_registries[typeid(T)].get());
   }
 
-  /* bad, needs to go through all components involved */
   template <typename... ComponentTypes> std::vector<unsigned long long> all_components()
   {
-    auto types = FILTER<ComponentTypes...>();
-    std::unordered_map<unsigned long long, int> id_freq;
     std::vector<unsigned long long> filtered_ids;
     (
         [&] {
+          std::vector<unsigned long long> current_ids;
           std::type_index component_type = typeid(ComponentTypes);
-          const auto &all_ids_of_type = static_cast<Component_Registry<ComponentTypes> *>(_component_registries[component_type].get())->all_ids();
-          for (auto &id : all_ids_of_type) {
-            id_freq[id]++;
-            if (id_freq[id] == types.size()) {
-              filtered_ids.push_back(id);
+          if (filtered_ids.empty()) {
+            filtered_ids = static_cast<Component_Registry<ComponentTypes> *>(_component_registries[component_type].get())->all_ids();
+          }
+          else {
+            Component_Registry<ComponentTypes> *registry = static_cast<Component_Registry<ComponentTypes> *>(_component_registries[component_type].get());
+            for (unsigned long long id : filtered_ids) {
+              if (registry->has(id)) {
+                current_ids.push_back(id);
+              }
             }
+            filtered_ids = current_ids;
           }
         }(),
         ...);
     return filtered_ids;
   }
 
-  template <typename T> T &component(const unsigned long long entity_id) { return component_registry<T>()->get(entity_id); }
+  template <typename T> T &component(const unsigned long long guid) { 
+      return component_registry<T>()->get(guid); 
+  }
 
   template <typename T> void run_system();
 

@@ -54,7 +54,7 @@ void from_json(const json &j, Health &health)
 
 void to_json(nlohmann::json &j, const Player &player) { j = json{{"player", true}}; }
 
-void from_json(const nlohmann::json &j, Player &player) { j.at("player_id").get_to(player.entity_id); }
+void from_json(const nlohmann::json &j, Player &player) { j.at("player_id").get_to(player.id); }
 
 void to_json(nlohmann::json &j, const Kinematics &kinematics)
 {

@@ -2,6 +2,7 @@
 #define _SERIALIZATION_H_
 
 #include "../../external/json.hpp"
+#include "components.hpp"
 
 struct Serializable {
   nlohmann::json data;

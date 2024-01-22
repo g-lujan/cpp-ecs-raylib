@@ -37,7 +37,7 @@ template <> void ECS::run_system<System::Tile>()
     BeginMode2D(view.camera);
     for (const auto &tile_id : all_components<Tile>()) {
       Tile &tile = component<Tile>(tile_id);
-      tile.tex->draw(tile.src_rect, component<Kinematics>(tile.entity_id).position, view.tint, tile.rotation, tile.flip);
+      tile.tex->draw(tile.src_rect, component<Kinematics>(tile.id).position, view.tint, tile.rotation, tile.flip);
     }
     EndMode2D();
   }
@@ -130,11 +130,11 @@ template <> void ECS::run_system<System::Player_Movement>()
 
 template <> void ECS::run_system<System::Physics>()
 {
-  for (const auto &id : all_components<Collider, Kinematics>()) {
+  for (const unsigned long long &id : all_components<Collider, Kinematics>()) {
     // register collisions
     auto &body = component<Collider>(id);
     body.collision_sides.clear();
-    for (const auto &other_id : all_components<Collider>()) {
+    for (const unsigned long long &other_id : all_components<Collider>()) {
       if (other_id == id) {
         continue;
       }
@@ -195,9 +195,9 @@ void ECS::serialize()
 {
   nlohmann::json output;
 
-  for (int i = 0; i < _latest; ++i) {
+  for (const unsigned long long id : all_components()) {
     for (auto &&[type, registry] : _component_registries) {
-      serialize_component(i, output, registry.get());
+      serialize_component(id, output, registry.get());
     }
   }
   save(output);

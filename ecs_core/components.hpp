@@ -12,8 +12,15 @@
 // Serialization is client defined
 struct Serializable;
 
+struct ID {
+  unsigned long long vec_index;
+  unsigned long long global_id;
+
+  bool operator==(ID const &) const = default;
+};
+
 struct Component {
-  unsigned long long entity_id;
+  unsigned long long id;
   bool serializable = false;
   virtual std::unique_ptr<Serializable> serialize() = 0;
   virtual std::string type_name() const = 0;
