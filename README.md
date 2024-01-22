@@ -39,11 +39,11 @@ cmake --build build-msvc --config RelWithDebInfo
 
 * Example results from VTune, showing how the use of maps to manage entities and components together with a lack of parallelism impairs the performance:
 ```
-Time to perform 300000 spawns: 204ms
-Time to run 100 iterations: 25175ms
+Time to perform 300000 spawns: 10ms
+Time to run 100 systems with 100000 entities: 310ms
 ```
 
-![image](https://github.com/g-lujan/cpp-ecs-raylib/assets/23530029/71cdbc37-9d5e-45c6-a503-f51775e1deaa)
-![image](https://github.com/g-lujan/cpp-ecs-raylib/assets/23530029/89f234ee-4353-4155-870d-10e336eb0a76)
+![image](https://github.com/g-lujan/cpp-ecs-raylib/assets/23530029/fbba0070-34aa-448e-a9d8-f89aae0f3e69)
+![image](https://github.com/g-lujan/cpp-ecs-raylib/assets/23530029/edd0449c-6f0f-4b1a-9b30-729388c820c9)
 
   
